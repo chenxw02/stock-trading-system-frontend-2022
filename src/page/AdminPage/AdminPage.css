@@ -13,17 +13,33 @@
 }
 
 .admin_header {
-    border:0.3em groove rgba(58, 57, 57, 0.233);
+    border:0.3em groove rgba(150, 150, 150, 0.233);
     text-align: left;
-    font-size: 15px;
+    font-size: 20px;
     font-weight: bolder;
     padding: 20px;
     background-color: #e5ebeb;
+    display: flex;
+    justify-content:space-between;
+}
+
+.admin_welcome{
+    width: 33%;
+}
+
+.admin_datetime{
+    margin: auto;
 }
 
 .admin_button{
     float: right;
-    margin-right: 2%;
+    margin-right: 10%;
+}
+
+.admin_button_box{
+    display: flex;
+    justify-content:flex-end;
+    width: 33%;
 }
 
 .admin_background{
