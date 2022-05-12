@@ -1,45 +1,66 @@
 .login_background{
-    background-color: blueviolet;
-    margin-top: 15%;
-    margin-bottom: 35%;
     position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url("./background.jpg") no-repeat center center fixed;
+    /*兼容浏览器版本*/
+    -webkit-background-size: cover;
+    -o-background-size: cover;                
+    background-size: cover;
 }
 
-.login_warning{
-    text-align: center;
-    font-size: large;
-    color: red;
-    margin-top: 1.5%;
-    margin-bottom: 1.5%;
+.login_divider
+{
+    height: 100%;
+    margin-top: 120%;
+    border:0.01em groove rgba(150, 150, 150, 0.233);
 }
 
 .login_border{
-    border:0.2em solid rgba(192, 187, 187, 0.5);
-    /* height: auto; */
-    margin-left: 30%;
-    margin-right: 30%;
-    margin-top: 1%;
+    background-color: rgba(109, 122, 153, 0.613);
+    height: auto; 
+    margin-left: 3%;
+    width: 70%;
+    margin-top: 28%;
 }
 
 .login_group{
-    margin-left: 5%;
-    margin-right: 5%;
-    margin-top: 1%;
-    margin-bottom: 1%;
+    margin-left: 10%;
+    margin-top: 4%;
+    margin-bottom: 6%;
 }
 
 .login_button{
-    margin-left: 5%;
-    margin-right: 5%;
-    margin-top: 1%;
-    margin-bottom: 1%;
-    width: 30%;
+    margin-left: 25%;
+    margin-top: 2%;
+    margin-bottom: 4%;
+    width: 50%;
 }
 
-.login_inputbox{
+.login_inputbox_user{
     margin-left: 5%;
     margin-right: 5%;
     width: 90%;
-    margin-top: 1%;
-    margin-bottom: 1%;
+    margin-top: 10%;
+    margin-bottom: 3%;
 }
+
+.login_inputbox_pwd{
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+}
+
+.login_carousel{
+    margin-top: 15%;
+    margin-left: 20%;
+    width: 70%;
+}
+
+.login_title{
+    font-size: 400;
+    font-weight: 400;
+}
+
