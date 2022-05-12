@@ -1,0 +1,45 @@
+.login_background{
+    background-color: blueviolet;
+    margin-top: 15%;
+    margin-bottom: 35%;
+    position: absolute;
+}
+
+.login_warning{
+    text-align: center;
+    font-size: large;
+    color: red;
+    margin-top: 1.5%;
+    margin-bottom: 1.5%;
+}
+
+.login_border{
+    border:0.2em solid rgba(192, 187, 187, 0.5);
+    /* height: auto; */
+    margin-left: 30%;
+    margin-right: 30%;
+    margin-top: 1%;
+}
+
+.login_group{
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+.login_button{
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    width: 30%;
+}
+
+.login_inputbox{
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 90%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}

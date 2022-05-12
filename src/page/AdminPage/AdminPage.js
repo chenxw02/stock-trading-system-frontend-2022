@@ -22,16 +22,16 @@ const data = [
 
 function AdminPage() {
     return(
-        <div className='Admin_BackGound'>
+        <div className='admin_background'>
 
-        <div className='Admin_Header'>
+        <div className='admin_header'>
             Hi,Admin
-            <Button type="primary" className="Admin_Button">修改密码</Button>
-            <Button type="primary" danger className="Admin_Button">退出登录</Button>
+            <Button type="primary" danger className="admin_button">退出登录</Button>
+            <Button type="primary" className="admin_button">修改密码</Button>
         </div>
 
-        <div className='Admin_TabelBack'>
-           <Table dataSource={data} className="Admin_Table">
+        <div className='admin_table_back'>
+           <Table dataSource={data} className="admin_table">
                 <Column title="股票编号" dataIndex="id" defaultSortOrder="descend"/>
                 <Column title="股票名称" dataIndex="name" defaultSortOrder="descend" />
                 <Column title="股票信息" dataIndex="info" defaultSortOrder="descend" />
