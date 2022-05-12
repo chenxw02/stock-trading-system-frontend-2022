@@ -1,0 +1,34 @@
+.Admin_Table{
+    border:0.1em solid rgba(192, 187, 187, 0.5);
+    height: auto;
+    margin-left: 0.1%;
+    margin-right: 0.1%;
+    margin-top: 1%;
+}
+
+.Admin_TabelBack{
+    background-color: rgba(255, 255, 255, 0.5);
+    margin-left: 3%;
+    margin-right: 3%;
+}
+
+.Admin_Header {
+    border:0.3em groove rgba(58, 57, 57, 0.233);
+    text-align: left;
+    font-size: 15px;
+    font-weight: bolder;
+    padding: 20px;
+    background-color: #e5ebeb;
+}
+
+.Admin_Button{
+    float: right;
+    margin-right: 2%;
+}
+
+.Admin_BackGound{
+    background-color: rgb(229, 249, 249);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
