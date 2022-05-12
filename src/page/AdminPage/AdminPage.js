@@ -2,6 +2,7 @@ import './AdminPage.css';
 import { Table, Button, Space, Modal, Descriptions, Switch, Input, InputNumber, message } from 'antd';
 import { useState } from 'react';
 const { Column, ColumnGroup } = Table;
+import {LockOutlined} from "@ant-design/icons";
 
 const data = [
     {
@@ -96,6 +97,7 @@ const Stockdata = [
 
 function AdminPage() {
     const [isDetailsVisible, setIsDetailsVisible] = useState(false);
+    const [isPwdChangeVisible, setIsPwdChangeVisible] = useState(false);
 
     const showDetails = () => {
         setIsDetailsVisible(true);
@@ -107,6 +109,18 @@ function AdminPage() {
 
     const handleCancel = () => {
         setIsDetailsVisible(false);
+    };
+
+    const showPwdChange = () => {
+        setIsPwdChangeVisible(true);
+    }
+
+    const handlePwdOk = () => {
+        setIsPwdChangeVisible(false);
+    };
+
+    const handlePwdCancel = () => {
+        setIsPwdChangeVisible(false);
     };
 
 
@@ -126,7 +140,7 @@ function AdminPage() {
                         window.location.href="./";
                     }}
                 >退出登录</Button>
-                <Button type="primary" className="admin_button">修改密码</Button> 
+                <Button type="primary" className="admin_button" onClick={()=>{showPwdChange();}}>修改密码</Button> 
             </div>
             
         </div>
@@ -184,9 +198,31 @@ function AdminPage() {
                     formatter={value => `${Number(value).toFixed(2)}%`}
                     parser={value => value.replace('%', '')} />
                 <Button type="primary" style={{ width: '10%' , marginTop:"1.5%" , marginLeft:"10%"}}
-                onClick={()=>{message.success("设置成功");}}>
+                    onClick={()=>{message.success("设置成功");}}>
                     设置
                 </Button>,
+            </Modal> 
+            <Modal title="修改密码" visible={isPwdChangeVisible} onOk={()=>handlePwdOk()} onCancel={()=>handlePwdCancel()}
+            footer={null}>
+            <Input.Password
+                className="admin_pwd_inputbox"
+                placeholder="原密码"
+                prefix={<LockOutlined />}
+            />
+            <Input.Password
+                className="admin_pwd_inputbox"
+                placeholder="新密码"
+                prefix={<LockOutlined />}
+            />
+            <Input.Password
+                className="admin_pwd_inputbox"
+                placeholder="重新输入新密码"
+                prefix={<LockOutlined />}
+            />  
+            <Button type="primary" style={{ width: '20%' , marginTop:"3%" , marginLeft:"75%"}}
+                    onClick={()=>{message.success("密码修改成功");}}>
+                    更改密码
+            </Button>,
             </Modal> 
         </div>
         
