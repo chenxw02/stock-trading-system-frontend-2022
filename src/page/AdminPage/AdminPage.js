@@ -26,15 +26,19 @@ function AdminPage() {
 
         <div className='admin_header'>
             Hi,Admin
-            <Button type="primary" danger className="admin_button">退出登录</Button>
+            <Button type="primary" danger className="admin_button"
+                onClick={()=>{
+                    window.location.href="./";
+                }}
+            >退出登录</Button>
             <Button type="primary" className="admin_button">修改密码</Button>
         </div>
 
         <div className='admin_table_back'>
            <Table dataSource={data} className="admin_table">
-                <Column title="股票编号" dataIndex="id" defaultSortOrder="descend"/>
-                <Column title="股票名称" dataIndex="name" defaultSortOrder="descend" />
-                <Column title="股票信息" dataIndex="info" defaultSortOrder="descend" />
+                <Column title="股票编号" dataIndex="id" defaultSortOrder="descend" sorter="(a, b) => a.id - b.id" />
+                <Column title="股票名称" dataIndex="name" defaultSortOrder="descend" sorter="(a, b) => a.name - b.name" />
+                <Column title="股票信息" dataIndex="info" defaultSortOrder="descend" sorter="(a, b) => a.info - b.info" />
                 <Column
                 title="Action"
                 key="action"
