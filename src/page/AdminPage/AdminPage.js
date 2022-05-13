@@ -1,5 +1,5 @@
 import './AdminPage.css';
-import { Table, Button, Space, Modal, Descriptions, Switch, Input, InputNumber, message } from 'antd';
+import { Table, Button, Space, Modal, Descriptions, Switch, Input, InputNumber, message, Menu } from 'antd';
 import { useState } from 'react';
 const { Column, ColumnGroup } = Table;
 import {LockOutlined} from "@ant-design/icons";
@@ -25,7 +25,7 @@ const data = [
     },
 ]
 
-const Stockdata = [
+const StockDataBuy = [
     {
         price: 2.00,
         time: "2022-5-12 20:38:31",
@@ -44,6 +44,29 @@ const Stockdata = [
     {
         price: 2.03,
         time: "2022-5-11 17:54:01",
+        number: 6823,
+    },
+]
+
+const StockDataSell = [
+    {
+        price: 2.11,
+        time: "2022-5-10 20:38:31",
+        number: 10800,
+    },
+    {
+        price: 3.01,
+        time: "2022-5-11 17:28:11",
+        number: 13400,
+    },
+    {
+        price: 1.99,
+        time: "2022-5-11 17:08:25",
+        number: 9820,
+    },
+    {
+        price: 2.03,
+        time: "2022-5-12 19:54:01",
         number: 6823,
     },
 ]
@@ -98,7 +121,9 @@ const Stockdata = [
 function AdminPage() {
     const [isDetailsVisible, setIsDetailsVisible] = useState(false);
     const [isPwdChangeVisible, setIsPwdChangeVisible] = useState(false);
-
+    const [stockSortOrder, setStockSortOrder] = useState("descend");
+    const [MenuCurrentChoose, setMenuCurrentChoose] = useState("descend");
+    
     const showDetails = () => {
         setIsDetailsVisible(true);
     };
@@ -123,7 +148,11 @@ function AdminPage() {
         setIsPwdChangeVisible(false);
     };
 
+    const changeSortOrder = (e) =>{
+        setStockSortOrder(e);
+    }
 
+    console.log(stockSortOrder);
     return(
         <div className='admin_background'>
 
@@ -175,13 +204,31 @@ function AdminPage() {
                     <Descriptions.Item label="最新交易价格">2</Descriptions.Item>
                     <Descriptions.Item label="最新交易数量">109832</Descriptions.Item>
                 </Descriptions>
-                <Table  dataSource={Stockdata} className="admin_table" size="small" bordered="true">
-                    <Column title="股票价格"  dataIndex="price" defaultSortOrder="descend" sorter={(a, b) => a.price - b.price} />
+                <Menu onClick={(e)=>{setMenuCurrentChoose(e.key);changeSortOrder(e.key);}} selectedKeys={[MenuCurrentChoose]} mode="horizontal"
+                items={[{label: (
+                                <a onClick={()=>changeSortOrder()}>
+                                    买指令
+                                </a>
+                                ),
+                        key: "descend",
+                        },
+                        {label: (
+                                <a onClick={()=>changeSortOrder()}>
+                                    卖指令
+                                </a>
+                                ),
+                        key: "ascend",
+                        }
+                        ]} />
+                <Table  dataSource={stockSortOrder=="descend"?StockDataBuy:StockDataSell} sortDirections={stockSortOrder} className="admin_table" size="small" bordered="true">
+                    <Column title="股票价格"  dataIndex="price" sortOrder={stockSortOrder} sorter={(a, b) => a.price - b.price} />
                     <Column title="进入系统时间"  dataIndex="time" />
                     <Column title="股数"  dataIndex="number" />
-                    <Column title="操作" key="action"
+                    <Column title="操作" key="action" width={"20%"}
                         render={() => (
-                            <Switch checkedChildren="开启交易" unCheckedChildren="暂停交易" defaultChecked />
+                            <Space size="small">
+                                <Switch checkedChildren="开启交易" unCheckedChildren="暂停交易" defaultChecked />
+                            </Space>
                         )}
                         />
                 </Table> 
