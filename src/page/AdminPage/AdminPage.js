@@ -182,24 +182,25 @@ function AdminPage() {
                     <Column title="最新成交价格"  dataIndex="price" defaultSortOrder="descend" sorter={(a, b) => a.price - b.price} />
                     <Column title="最新成交数量"  dataIndex="number" defaultSortOrder="descend" sorter={(a, b) => a.number - b.number} />
                 </ColumnGroup>
-                <Column title="操作" key="action"
+                <Column title="操作" key="action" width={200}
                     render={() => (
                         <Space size="middle">
                             <a onClick={()=>{
                                 showDetails();
                             }} >详情</a>
+                            <Switch checkedChildren="开启交易" unCheckedChildren="暂停交易" defaultChecked />
                         </Space>
                     )}
                     />
             </Table> 
-            <Modal title="股票详情" width={1000} visible={isDetailsVisible} onOk={()=>handleOk()} onCancel={()=>handleCancel()}
+            <Modal title="股票详情" width={800} visible={isDetailsVisible} onOk={()=>handleOk()} onCancel={()=>handleCancel()}
                 footer={[
                     <Button key="ok" type="primary" onClick={()=>handleOk()}>
                       返回
                     </Button>,
                   ]}
             >
-                <Descriptions bordered>
+                <Descriptions bordered size="small">
                     <Descriptions.Item label="股票名称">垃圾css有限公司</Descriptions.Item>
                     <Descriptions.Item label="最新交易价格">2</Descriptions.Item>
                     <Descriptions.Item label="最新交易数量">109832</Descriptions.Item>
@@ -224,13 +225,6 @@ function AdminPage() {
                     <Column title="股票价格"  dataIndex="price" sortOrder={stockSortOrder} sorter={(a, b) => a.price - b.price} />
                     <Column title="进入系统时间"  dataIndex="time" />
                     <Column title="股数"  dataIndex="number" />
-                    <Column title="操作" key="action" width={"20%"}
-                        render={() => (
-                            <Space size="small">
-                                <Switch checkedChildren="开启交易" unCheckedChildren="暂停交易" defaultChecked />
-                            </Space>
-                        )}
-                        />
                 </Table> 
                 <InputNumber addonBefore="最大涨幅"
                     style={{ width: '30%', marginTop:"1.5%" }} 
