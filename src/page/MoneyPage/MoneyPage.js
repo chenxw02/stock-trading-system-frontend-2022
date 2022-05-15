@@ -78,7 +78,7 @@ function MoneyPage()
         }} dateFormatter="string" headerTitle="资金账户详情" toolBarRender={() => [
             
         ]}/>
-  <div className="site-card-wrapper">
+  <div className="MoneyPage-site-card-wrapper">
     <Row gutter={16}>
       <Col span={8}>
         <Card title="开设资金账户" bordered={true}hoverable={true}>

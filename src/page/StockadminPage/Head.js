@@ -6,14 +6,14 @@ function Head() {
     return(
 
         <div>
-        <div className='title'>
-        <div className='admin_welcome'>Hi,Admin</div>
+        <div className='Stockadmin_title'>
+        <div className='Stockadmin_welcome'>Hi,Admin</div>
 
-        <div id="datetime" className="admin_datetime">  
+        <div id="datetime" className="Stockadmin_datetime">  
             {setInterval("document.getElementById('datetime').innerHTML=new Date();", 1000)}  
         </div>
-        <div className='admin_button_box'>
-           <Button type="primary" danger className="admin_button"
+        <div className='Stockadmin_button_box'>
+           <Button type="primary" danger className="Stockadmin_button"
                 onClick={()=>{
                     window.location.href="./";
                 }}
@@ -26,7 +26,7 @@ function Head() {
      <Menu
     theme="dark"
     mode="horizontal"
-    defaultSelectedKeys={['item-2']}
+    defaultSelectedKeys={['item-1']}
 
   >
        <Menu.Item key="1">

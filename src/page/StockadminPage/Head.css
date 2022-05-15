@@ -1,4 +1,4 @@
-.site-layout-content {
+.Stockadmin-site-layout-content {
     min-height: 600px;
     padding: 24px;
     background: #fff;
@@ -10,12 +10,12 @@
     margin: 10px 24px 16px 0;
     background: rgba(255, 255, 255, 0.3);
   }
-  .ant-row-rtl #components-layout-demo-top .logo {
+  .Stockadmin_ant-row-rtl #components-layout-demo-top .logo {
     float: right;
     margin: 16px 0 16px 24px;
   }
 
-  .title {
+  .Stockadmin_title {
     border:0.3em groove rgba(150, 150, 150, 0.233);
     text-align: left;
     font-size: 20px;
@@ -26,21 +26,21 @@
     justify-content:space-between;
   }
 
-  .admin_datetime{
+  .Stockadmin_datetime{
     width: 33%;
 
 }
 
-.admin_welcome{
+.Stockadmin_welcome{
     width: 33%;
 }
 
-.text{
+.Stockadmin_text{
    
     font-size: 20px;
 }
 
-.admin_button_box{
+.Stockadmin_button_box{
     display: flex;
     justify-content:flex-end;
     width: 33%;
