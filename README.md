@@ -2,6 +2,45 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## CSS命名规范
+
+由于CSS存在奇奇怪怪的覆盖问题，因此希望大家可以遵守一下该命名规范。
+
+- 采用全小写+下划线的组合
+- 前缀为该css从属page的名称，如AdminPage的CSS均以```admin_```为前缀
+
+示例：
+
+```css
+/* Admin_page */
+.admin_table{
+    border:0.1em solid rgba(192, 187, 187, 0.5);
+    height: auto;
+    margin-left: 0.1%;
+    margin-right: 0.1%;
+    margin-top: 1%;
+}
+
+.admin_table_back{
+    background-color: rgba(255, 255, 255, 0.5);
+    margin-left: 3%;
+    margin-right: 3%;
+}
+
+.admin_header {
+    border:0.3em groove rgba(150, 150, 150, 0.233);
+    text-align: left;
+    font-size: 20px;
+    font-weight: bolder;
+    padding: 20px;
+    background-color: rgba(168, 211, 242, 0.5);
+    display: flex;
+    justify-content:space-between;
+}
+```
+
+
+
 ## 环境配置
 
 安装一个比较新的 nodejs 和 npm，Linux/WSL 可以参考[如何在 Ubuntu 20.04 上安装 Node.js 和 npm - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/140961618)。但是不要直接使用 apt install，apt 中的版本非常古老，参考文章中的从 NVM 安装。
