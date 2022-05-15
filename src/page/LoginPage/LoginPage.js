@@ -80,7 +80,7 @@ function LoginPage() {
                                         window.location.href="./trade";
                                         break;
                                     case "账户管理员":
-                                        window.location.href="./money";
+                                        window.location.href="./stockadmin";
                                         break;
                                     case "股票管理员":
                                         window.location.href="./admin";

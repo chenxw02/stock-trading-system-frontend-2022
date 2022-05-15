@@ -1,8 +1,9 @@
+import {LockOutlined} from "@ant-design/icons";
 import './AdminPage.css';
 import { Table, Button, Space, Modal, Descriptions, Switch, Input, InputNumber, message, Menu } from 'antd';
 import { useState } from 'react';
 const { Column, ColumnGroup } = Table;
-import {LockOutlined} from "@ant-design/icons";
+
 
 const data = [
     {
