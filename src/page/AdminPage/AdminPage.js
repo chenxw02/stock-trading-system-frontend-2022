@@ -8,19 +8,19 @@ const { Column, ColumnGroup } = Table;
 const data = [
     {
         id : '00000',
-        name : '垃圾css有限公司',
+        name : 'SZS DataBase Co. Ltd',
         price: 10,
         number: 20098,
     },
     {
         id : '00001',
-        name : '垃圾unity有限公司',
+        name : 'ADS QSC Co. Ltd',
         price: 5,
         number: 12742,
     },
     {
         id : '00002',
-        name : '垃圾vtk有限公司',
+        name : 'SEF Squad Co. Ltd',
         price: 2,
         number: 109832,
     },
@@ -202,7 +202,7 @@ function AdminPage() {
                   ]}
             >
                 <Descriptions bordered size="small">
-                    <Descriptions.Item label="股票名称">垃圾css有限公司</Descriptions.Item>
+                    <Descriptions.Item label="股票名称">SEF Squad Co. Ltd</Descriptions.Item>
                     <Descriptions.Item label="最新交易价格">2</Descriptions.Item>
                     <Descriptions.Item label="最新交易数量">109832</Descriptions.Item>
                 </Descriptions>
