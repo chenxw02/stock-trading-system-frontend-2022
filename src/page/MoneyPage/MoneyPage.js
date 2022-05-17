@@ -81,7 +81,7 @@ function MoneyPage()
   <div className="MoneyPage-site-card-wrapper">
     <Row gutter={16}>
       <Col span={8}>
-        <Card title="开设资金账户" bordered={true}hoverable={true}>
+        <Card title="开设/补办资金账户" bordered={true}hoverable={true}>
           开设一个与证券账户绑定的资金账户
         </Card>
       </Col>
@@ -104,7 +104,7 @@ function MoneyPage()
         </Card>
       </Col>
       <Col span={8}>
-        <Card title="补办资金账户" bordered={true}hoverable={true}>
+        <Card title="解冻资金账户" bordered={true}hoverable={true}>
         对资金账户注销的证券账户重新补办
         </Card>
       </Col>

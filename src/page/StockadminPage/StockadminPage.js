@@ -9,6 +9,11 @@ function callback(key) {
 }
 
 const columns = [
+  {
+    title: '编号',
+      dataIndex: 'id_1',
+      key: 'id_1',
+  },
     {
       title: '证券账号',
       dataIndex: 'stock',
@@ -67,6 +72,7 @@ const columns = [
   const data = [
     {
       key: '1',
+      id_1:'1',
       stock: '43124',
       id: 32455436,
       event:'销户',
@@ -74,6 +80,7 @@ const columns = [
     },
     {
         key: '2',
+        id_1:'2',
         stock: '35423',
         id: 532453434,
         event:'开户',
@@ -81,6 +88,7 @@ const columns = [
     },
     {
         key: '3',
+        id_1:'3',
         stock: '34324',
         id: 23413244,
         event:'开户',
