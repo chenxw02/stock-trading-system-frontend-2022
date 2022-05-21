@@ -1,0 +1,14 @@
+.sell-button{
+    border-radius: 6px;
+    margin-top: 1rem;
+    width: 100%;
+    background-color: rgb(42, 182, 237);
+    color:white;
+    font-weight: 500;
+    padding: 0.5em 1.5em;
+    border: 0;
+    color: white;
+    transition: 0.25s ease;
+    cursor: pointer;
+    clear: both;
+}
