@@ -71,7 +71,7 @@ function LoginPage() {
                             placeholder="密码"
                             prefix={<LockOutlined />}
                             onChange={(event) => {
-                                setAid(event.target.value);
+                                setPassword(event.target.value);
                               }}
                         />
                         <Radio.Group 
