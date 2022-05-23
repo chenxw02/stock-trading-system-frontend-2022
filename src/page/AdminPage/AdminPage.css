@@ -18,7 +18,7 @@
     font-size: 20px;
     font-weight: bolder;
     padding: 20px;
-    background-color: rgba(168, 211, 242, 0.5);
+    /* background-color: rgba(168, 211, 242, 0.5); */
     display: flex;
     justify-content:space-between;
 }
@@ -43,7 +43,7 @@
 }
 
 .admin_background{
-    background: url("./admin.jpg") no-repeat center center fixed;
+    /* background: url("./admin.jpg") no-repeat center center fixed; */
     /*兼容浏览器版本*/
     -webkit-background-size: cover;
     -o-background-size: cover;                
