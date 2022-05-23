@@ -1,6 +1,6 @@
 import {Menu,Button} from 'antd';
 import React from 'react';
-import './InfoHead.css'
+import './info_head.css'
 const name = ['00001', '00002'];
 const authority = ['用户', '高级用户'];
 const i = 1;
