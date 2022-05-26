@@ -91,7 +91,20 @@ function LoginPage() {
                                         window.location.href="./trade";
                                         break;
                                     case "账户管理员":
-                                        window.location.href="./stockadmin";
+                                        request('account_admin/login', "POST",{'Content-Type': 'application/json'},
+                                        {
+                                        "administrator_id":aid,
+                                        "administrator_password":password}
+                                        )
+                                        .then((response) => {
+                                            console.log(response);
+                                            if (response.code == '0') {
+                                                window.location.href="./Stockadmin";
+                                            }
+                                            else {
+                                            alert(response.message);
+                                            }
+                                        })
                                         break;
                                     case "股票管理员":
                                         request('/admin/login', "POST",{'Content-Type': 'application/json'},

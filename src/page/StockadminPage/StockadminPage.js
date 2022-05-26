@@ -101,7 +101,7 @@ function MoneyPage() {
 
         <div>
             <Head keyValue="2"/>
-      <div className="Stockadmin_site-layout-content">
+      <div className="stockadmin_site-layout-content">
       <Descriptions title="欢迎"layout="horizontal" bordered>
       <Descriptions.Item label="创建人">管理员</Descriptions.Item>
       <Descriptions.Item label="Status" span={3}>

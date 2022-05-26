@@ -6,14 +6,14 @@ function Head() {
     return(
 
         <div>
-        <div className='Stockadmin_title'>
-        <div className='Stockadmin_welcome'>Hi,Admin</div>
+        <div className='stockadmin_title'>
+        <div className='stockadmin_welcome'>Hi,Admin</div>
 
-        <div id="datetime" className="Stockadmin_datetime">  
+        <div id="datetime" className="stockadmin_datetime">  
             {setInterval("document.getElementById('datetime').innerHTML=new Date();", 1000)}  
         </div>
-        <div className='Stockadmin_button_box'>
-           <Button type="primary" danger className="Stockadmin_button"
+        <div className='stockadmin_button_box'>
+           <Button type="primary" danger className="stockadmin_button"
                 onClick={()=>{
                     window.location.href="./";
                 }}
