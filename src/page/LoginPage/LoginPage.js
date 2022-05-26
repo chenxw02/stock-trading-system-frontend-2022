@@ -1,10 +1,11 @@
 import "./LoginPage.css"
-import { Input, Button, Radio,Divider, Row, Col, Carousel, Image} from 'antd';
+import { Input, Button, Radio,Divider, Row, Col, Carousel} from 'antd';
 import {
     UserOutlined,
     LockOutlined
   } from "@ant-design/icons";
 import { useState} from "react";
+import request from "../../utils/request";
 
 const options = [
     { label: '普通用户', value: '普通用户'},
@@ -15,6 +16,10 @@ const options = [
 
 function LoginPage() {
     const [identity, setIdentity] = useState("普通用户");
+    const [aid, setAid] = useState("");
+    const [password, setPassword] = useState("");
+
+
     const contentStyle = {
         height: '400px',
         color: '#fff',
@@ -57,11 +62,17 @@ function LoginPage() {
                             className="login_inputbox_user"
                             placeholder="用户名"
                             prefix={<UserOutlined />}
+                            onChange={(event) => {
+                                setAid(event.target.value);
+                              }}
                         />
                         <Input.Password
                             className="login_inputbox_pwd"
                             placeholder="密码"
                             prefix={<LockOutlined />}
+                            onChange={(event) => {
+                                setPassword(event.target.value);
+                              }}
                         />
                         <Radio.Group 
                             buttonStyle="solid"
@@ -80,10 +91,35 @@ function LoginPage() {
                                         window.location.href="./trade";
                                         break;
                                     case "账户管理员":
-                                        window.location.href="./stockadmin";
+                                        request('account_admin/login', "POST",{'Content-Type': 'application/json'},
+                                        {
+                                        "administrator_id":aid,
+                                        "administrator_password":password}
+                                        )
+                                        .then((response) => {
+                                            console.log(response);
+                                            if (response.code == '0') {
+                                                window.location.href="./Stockadmin";
+                                            }
+                                            else {
+                                            alert(response.message);
+                                            }
+                                        })
                                         break;
                                     case "股票管理员":
-                                        window.location.href="./admin";
+                                        request('/admin/login', "POST",{'Content-Type': 'application/json'},
+                                        {
+                                            "admin_id": aid,
+                                            "password": password
+                                        }).then((response) => {
+                                            console.log(response);
+                                            if (response.code == '0') {
+                                                window.location.href="./admin";
+                                            }
+                                            else {
+                                            alert(response.message);
+                                            }
+                                        })
                                         break;
                                 }
                             }}

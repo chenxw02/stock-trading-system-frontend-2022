@@ -1,6 +1,6 @@
 import 'antd/dist/antd.css';
 import { Routes, Route } from 'react-router-dom';
-import InfoPage from './page/InfoPage/InfoPage';
+import { InfoPage, QueryLogin, Register, QueryResult, Upgrade, Change, HighQueryResult } from './page/InfoPage/InfoPage';
 import AdminPage from './page/AdminPage/AdminPage';
 import StockPage from './page/StockPage/StockPage';
 import StockadminPage from './page/StockadminPage/StockadminPage';
@@ -19,6 +19,12 @@ function App() {
       <Route path='/stockadmin' element={<StockadminPage />} />
       <Route path='/trade' element={<TradePage />} />
       <Route path='/info' element={<InfoPage />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/querylogin' element={<QueryLogin />} />
+          <Route path='/queryresult' element={<QueryResult />} />
+          <Route path='/upgrade' element={<Upgrade />} />
+          <Route path='/change' element={<Change />} />
+          <Route path='/highqueryresult' element={<HighQueryResult />} />
       <Route path='/money' element={<MoneyPage />} />
       <Route path='/tradecenter' element={<TradeCenter />} />
       <Route path='/test' element={<TestPage />} />

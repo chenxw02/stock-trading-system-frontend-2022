@@ -1,6 +1,7 @@
 import {LockOutlined} from "@ant-design/icons";
 import './AdminPage.css';
 import { Table, Button, Space, Modal, Descriptions, Switch, Input, InputNumber, message, Menu } from 'antd';
+import {Link} from 'react-router-dom'
 import { useState } from 'react';
 const { Column, ColumnGroup } = Table;
 
@@ -174,6 +175,12 @@ function AdminPage() {
             </div>
             
         </div>
+
+        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
+            <Menu.Item key="1">
+            <Link to="/admin">股票管理员</Link>
+            </Menu.Item>
+        </Menu>
 
         <div className='admin_table_back'>
             <Table  dataSource={data} className="admin_table" bordered="true">
