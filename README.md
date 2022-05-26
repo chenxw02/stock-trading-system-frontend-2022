@@ -55,8 +55,10 @@ Windows 安装方法自行上网搜索。或者从微软商店安装一个 WSL�
 npm add react-router-dom
 npm add antd
 npm install @ant-design/pro-table
-//新增于2022.05.23 建议大家直接用原生的fetch发送http请求，减少安装不必要的依赖
+// 新增于2022.05.23 建议大家直接用原生的fetch发送http请求，减少安装不必要的依赖
 npm install jquery
+// 如果你启动时遇到Error: Package path ./helpers/esm/regeneratorRuntime is not exported，请安装如下依赖
+npm add @babel/runtime@^7.18.0
 ```
 
 依赖配置完毕后，在根目录运行`npm start`，访问 localhost:3000 即可。
