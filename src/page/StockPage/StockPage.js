@@ -84,7 +84,7 @@ function StockPage() {
         }} dateFormatter="string" headerTitle="证券账户详情" toolBarRender={() => [
             
         ]}/>
-  <div className="StockPage-site-card-wrapper">
+  <div className="stockPage-site-card-wrapper">
     <Row gutter={16}>
       <Col span={10}>
         <Card title="开设个人账户" bordered={true}hoverable={true}>
