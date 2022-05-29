@@ -1,14 +1,15 @@
 import Head from './Head.js';
 import './TradePage.css';
-import React, { useState, useRef} from 'react';
+import React, { useState, useRef, useEffect} from 'react';
 import { Card, Descriptions, Badge, Table, Tabs, Space, Tag, Statistic, Row, Col, Input, Drawer, ConfigProvider, Button, Modal, Popover, message, Popconfirm } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined, AudioOutlined } from '@ant-design/icons';
 import { hrHRIntl } from '@ant-design/pro-provider';
+import request from "../../utils/request";
+import { render } from '@testing-library/react';
 
 const { Search } = Input;
 
 var page=4;
-
 
 //提示窗
 const recordsNotice = (
@@ -42,9 +43,6 @@ function getClientHeight()
   }
   return clientHeight;
 }
- 
-
-
 
 //发起撤单的函数，需要在此进行条件判断
 function withdraw(e) {
@@ -103,65 +101,31 @@ const own_columns = [
 	},
 ];
 
-//持仓股票：信息，转为mysql
-const own = [
-	{
-		key: '1',
-		name: 'John Brown',
-		cost: 100,
-		price: 100,
-		num: 100,
-		ava: 100,
-		gnl: 100,
-		gnlratio: 10,
-		amount: 100,
-	},
-	{
-		key: '2',
-		name: 'Jim Green',
-		cost: 100,
-		price: 100,
-		num: 100,
-		ava: 100,
-		gnl: 100,
-		gnlratio: 10,
-		amount: 100,
-	},
-	{
-		key: '3',
-		name: 'hh',
-		cost: 100,
-		price: 100,
-		num: 100,
-		ava: 100,
-		gnl: 100,
-		gnlratio: 10,
-		amount: 100,
-	},
-	{
-		key: '4',
-		name: 'Jim Red',
-		cost: 100,
-		price: 100,
-		num: 100,
-		ava: 100,
-		gnl: 100,
-		gnlratio: 10,
-		amount: 100,
-	},
-	{
-		key: '5',
-		name: 'Jim Red',
-		cost: 100,
-		price: 100,
-		num: 100,
-		ava: 100,
-		gnl: 100,
-		gnlratio: 10,
-		amount: 100,
-	},
+//显示资金账户信息
+function ShowFundInfo() {
+	request(
+		'/fund/info',
+		"POST",
+		{'Content-Type': 'application/json'},
+		{"fund_account_number": "0000000001"}) //参数：资金账户号码
+	.then((response) => {
+		console.log('fund info', response);
+		let num = response.data.balance-response.data.frozen-response.data.taken;
 
-];
+		document.getElementById("asset").innerHTML = "资产："+response.data.balance;
+		document.getElementById("frozen").innerHTML = "冻结："+response.data.frozen;
+		document.getElementById("used").innerHTML = "已用："+response.data.taken;
+		document.getElementById("available").innerHTML = "可用："+num;
+
+		//点击查看更多信息后显示的部分
+		document.getElementById("asset2").innerHTML = "资产："+response.data.balance;
+		document.getElementById("frozen2").innerHTML = "冻结："+response.data.frozen;
+		document.getElementById("used2").innerHTML = "已用："+response.data.taken;
+		document.getElementById("available2").innerHTML = "可用："+num;
+		document.getElementById("position").innerHTML = "仓位："+(response.data.taken*100/response.data.balance)+"%";
+		document.getElementById("take").innerHTML = "可取："+(num-response.data.sellamount);
+	})
+}
 
 //表格排序函数
 function onChange(pagination, filters, sorter, extra) {
@@ -286,6 +250,37 @@ const withdraw_full = [
 //主函数
 function TradePage() {
 
+	const [own, setOwn] = useState([]) //持仓股票：信息
+	useEffect(() => { //查询股票持仓
+		request(
+			'/ownstock/info',
+			"POST",
+			{'Content-Type': 'application/json'},
+			{"fund_account_number": "0000000001"}) //参数：资金账户号码
+		.then((response) => {
+			console.log('own stock info', response);
+			var list = [];
+			for(var i=0; i<response.data.length; i++){
+				var c = response.data[i].own_amount/response.data[i].own_number; //成本
+				var g = (response.data[i].price-c)*response.data[i].own_number; //盈亏金额
+				var gr = g/(c*response.data[i].own_number); //盈亏比例
+				var temp = { //一条记录
+					key: response.data[i].stock_id,
+					name: response.data[i].stock_name,
+					cost: c.toFixed(2),
+					price: response.data[i].price,
+					num: response.data[i].own_number,
+					ava: response.data[i].own_number-response.data[i].frozen,
+					gnl: g.toFixed(2),
+					gnlratio: gr.toFixed(2),
+					amount: response.data[i].own_amount,
+				};
+				list.push(temp);
+			}
+			setOwn(list);
+		})
+	}, []);
+
 	//modal设置相关函数
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -306,6 +301,7 @@ function TradePage() {
 
 	const showDrawer = () => {
 		setVisible(true);
+		ShowFundInfo();
 	};
 
 	const onClose = () => {
@@ -460,7 +456,6 @@ function TradePage() {
 
 						{/* 股票持仓区 */}
 						<section class="stock-section">
-
 							{/* 股票持仓 */}
 							<div class="stock">
 								<Table columns={own_columns} dataSource={own} onChange={onChange} pagination={{ pageSize: 4 }} showSorterTooltip={false} />
@@ -475,16 +470,17 @@ function TradePage() {
 						<div class="money">
 							<Card title="人民币A股账户" bordered={false} style={{ width: 300 }}>
 								<Popover placement="topLeft" content={money_more}><a onClick={showDrawer}><p>账户信息</p></a></Popover>
-								<p>资产：100</p>
-								<p>已用：100</p>
-								<p>可用：100</p>
-								<p>冻结：0</p>
+								<ShowFundInfo></ShowFundInfo>
+								<p id="asset">资产：</p>
+								<p id="used">已用：</p>
+								<p id="available">可用：</p>
+								<p id="frozen">冻结：</p>
 							</Card>
 						</div>
 
 						{/* 交易记录 */}
 						<div class="withdraw">
-							<Table columns={withdraw_columns_light} dataSource={withdraw_light} pagination={{ pageSize: 4 }} />;
+							<Table columns={withdraw_columns_light} dataSource={withdraw_light} pagination={{ pageSize: 4 }} />
 						</div>
 
 						{/* 股票信息modal */}
@@ -602,12 +598,12 @@ function TradePage() {
 						<div>
 							<Drawer title="账户信息" placement="right" onClose={onClose} visible={visible} width={400}>
 								<p>资金账号：</p>
-								<p>资产：</p>
-								<p>可用：</p>
-								<p>可取：</p>
-								<p>已用：</p>
-								<p>仓位：</p>
-								<p>冻结：</p>
+								<p id="asset2">资产：</p>
+								<p id="available2">可用：</p>
+								<p id="take">可取：</p>
+								<p id="used2">已用：</p>
+								<p id="position">仓位：</p>
+								<p id="frozen2">冻结：</p>
 								<div class="buttons">
 								<Button>转账</Button>
 								<Button>查询</Button>

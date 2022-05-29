@@ -6,6 +6,7 @@ import { Card, Descriptions, Badge, Table, Tabs, Space, Tag, Statistic, Row, Col
 import { ArrowUpOutlined, ArrowDownOutlined, AudioOutlined } from '@ant-design/icons';
 import { hrHRIntl } from '@ant-design/pro-provider';
 import SizeContext from 'antd/lib/config-provider/SizeContext';
+import request from "../../utils/request";
 
 const { Option } = Select;
 
@@ -44,6 +45,28 @@ const trade_warning = () => {
 function trade(e) {
 	console.log(e);
 	message.success('交易已委托');
+}
+
+function buyupdate() {
+    request(
+		'/update/buy',
+		"POST",
+		{'Content-Type': 'application/json'},
+		{"transaction_id": "0000000001"})
+	.then((response) => {
+		console.log(response);
+	})
+}
+
+function sellupdate() {
+    request(
+		'/update/sell',
+		"POST",
+		{'Content-Type': 'application/json'},
+		{"transaction_id": "0000000001"})
+	.then((response) => {
+		console.log(response);
+	})
 }
 
 const own_columns = [
