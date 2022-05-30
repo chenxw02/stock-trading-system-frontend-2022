@@ -1,8 +1,10 @@
 import React from 'react';
 import './StockPage.css'
 import Head from '../StockadminPage/Head.js';
-import { Card,Col,Row } from 'antd';
+import { Card,Col,Modal,Row, Input } from 'antd';
 import ProTable from '@ant-design/pro-table';
+import { useState } from 'react';
+import { UserOutlined } from '@ant-design/icons';
 const tableListDataSource = [];
 const state=['正常','冻结','正常'];
 const stockname = ['32434','4344','4324'];
@@ -65,6 +67,18 @@ const columns = [
   },
 ];
 function StockPage() {
+  const [isDetailsVisible, setIsDetailsVisible] = useState(false);
+  const showpage1	= () =>
+  {
+    setIsDetailsVisible(true);
+  }
+  const handleOk = () => {
+    setIsDetailsVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsDetailsVisible(false);
+  };
     return(
 
         <div>
@@ -87,7 +101,7 @@ function StockPage() {
   <div className="StockPage-site-card-wrapper">
     <Row gutter={16}>
       <Col span={10}>
-        <Card title="开设个人账户" bordered={true}hoverable={true}>
+        <Card title="开设个人账户" bordered={true}hoverable={true} extra={<a onClick={showpage1}>More</a>}>
         自然人开立的证券帐户为个人帐户。
         </Card>
       </Col>
@@ -110,8 +124,12 @@ function StockPage() {
       </Col>
     </Row>
   </div>
-);
+;
+<Modal title="开设个人账户" width={800} visible={isDetailsVisible} onOk={handleOk} onCancel={handleCancel}>
+<Input placeholder="default size" prefix={<UserOutlined />} />
+       </Modal>
         </div>
+      
     )
 }
 
