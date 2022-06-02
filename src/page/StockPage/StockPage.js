@@ -85,7 +85,6 @@ function StockPage() {
   const [DateString, setDateString] = useState("");
   const [isDetailsVisible1, setIsDetailsVisible1] = useState(false);
   const [Daiban, setIndiDaiBan] = useState("");
-  var Datenow;
   const [LePerson_account, setLeaccount] = useState("");
   const [LePerson_pass, setLepass] = useState("");
   const [Le_ID, setLeID] = useState("");
@@ -124,7 +123,7 @@ function StockPage() {
         "telephone" : Individual_Phone,
         "agent" : value_tab,
         "agent_id" : Daiban,
-        "authority" : "N"
+        "authority" : "N",
       }).then((response) => {
         console.log(response);
         if (response.code == '0') {
@@ -145,7 +144,7 @@ function StockPage() {
     setIsDetailsVisible2(true);
   }
   const handleOk2 = () => {
-    request('/account_admin/add_personal_securities_account', "POST", { 'Content-Type': 'application/json' },
+    request('/account_admin/add_legal_person_securities_account', "POST", { 'Content-Type': 'application/json' },
     {
       "l_account_number": LePerson_account,
       "password": LePerson_pass,
@@ -159,7 +158,7 @@ function StockPage() {
       "authorized_person_id_number" : aurotity_ID,
       "authorized_person_telephone" : aurotity_phone,
       "authorized_person_address" : aurotity_address,
-      "authority" : "N"
+      "authority" : "N",
     }).then((response) => {
       console.log(response);
       if (response.code == '0') {
@@ -182,14 +181,16 @@ function StockPage() {
   const handleOk3 = () => {
     if(key == "1")
     {
+      console.log("!!!!");
       if(value_tab)
       {
+        console.log(value_tab,"!!");
         request('/account_admin/personal_security_freeze', "POST", { 'Content-Type': 'application/json' },
         {
-          "id_num/legal_register_num" : code
+          "id_num" : code
         }).then((response) => {
           console.log(response);
-          if (response.code == '0') {
+          if (response.code === '0') {
             alert("挂失成功！");
           }
           else {
@@ -198,13 +199,13 @@ function StockPage() {
     })
     }
     else
-    {
+    { 
       request('/account_admin/legal_person_security_freeze', "POST", { 'Content-Type': 'application/json' },
         {
-          "id_num/legal_register_num" : code
+          "legal_register_num" : code
         }).then((response) => {
           console.log(response);
-          if (response.code == '0') {
+          if (response.code === '0') {
             alert("挂失成功！");
           }
           else {
@@ -217,6 +218,7 @@ function StockPage() {
   {
     if(value_tab)
       {
+       
         request('/account_admin/re_add_personal_securities_account', "POST", { 'Content-Type': 'application/json' },
         {
           "user_id_number" : code,
@@ -261,7 +263,7 @@ function StockPage() {
     setIsDetailsVisible4(true);
   }
   const handleOk4 = () => {
-    request('/account_admin/fund_delete', "POST", { 'Content-Type': 'application/json' },
+    request('/account_admin/securities_account_delete', "POST", { 'Content-Type': 'application/json' },
         {
           "id_num/legal_register_num" : oldaccount,
           "security_num" : oldpass
@@ -295,12 +297,13 @@ function StockPage() {
     setDateString(dateString);
   };
   const { TabPane } = Tabs;
+  const [key,setkey]=useState(1);
   const onChange_Tab = (key) => {
     console.log(key);
+    setkey(key);
   };
   const [value_tab, setValue_tab] = useState(0);
   const onChange_Tab_guashi = (e) => {
-    console.log(e.target.value);
     setValue_tab(e.target.value);
   };
   return (
