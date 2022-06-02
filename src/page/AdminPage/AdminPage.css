@@ -1,60 +1,72 @@
-.admin_table{
-    border:0.1em solid rgba(192, 187, 187, 0.5);
+.admin_table {
+    border: 0.1em solid rgba(192, 187, 187, 0.5);
     height: auto;
     margin-left: 0.1%;
     margin-right: 0.1%;
     margin-top: 1%;
 }
 
-.admin_table_back{
+.admin_table_back {
     background-color: rgb(255, 255, 255);
     margin-left: 3%;
     margin-right: 3%;
 }
 
 .admin_header {
-    border:0.3em groove rgba(150, 150, 150, 0.233);
+    border: 0.3em groove rgba(150, 150, 150, 0.233);
     text-align: left;
     font-size: 20px;
     font-weight: bolder;
     padding: 20px;
     /* background-color: rgba(168, 211, 242, 0.5); */
     display: flex;
-    justify-content:space-between;
+    justify-content: space-between;
 }
 
-.admin_welcome{
+.admin_welcome {
     width: 33%;
 }
 
-.admin_datetime{
+.admin_datetime {
     margin: auto;
 }
 
-.admin_button{
+.admin_button {
     float: right;
     margin-right: 10%;
 }
 
-.admin_button_box{
+.admin_space {
     display: flex;
-    justify-content:flex-end;
+    justify-content: space-between;
+    width: 80%;
+    margin-left: 10%
+}
+
+.admin_detail {
+    color: rgb(61, 110, 194);
+}
+
+.admin_button_box {
+    display: flex;
+    justify-content: flex-end;
     width: 33%;
 }
 
-.admin_background{
+
+.admin_background {
     /* background: url("./admin.jpg") no-repeat center center fixed; */
     /*兼容浏览器版本*/
     -webkit-background-size: cover;
-    -o-background-size: cover;                
+    -o-background-size: cover;
     background-size: cover;
     width: 100%;
     height: 100%;
     position: absolute;
 }
 
-.admin_pwd_inputbox{
-    margin-left:5%;
+.admin_pwd_inputbox {
+    margin-left: 5%;
     margin-top: 1%;
     margin-bottom: 1%;
     width: 90%;

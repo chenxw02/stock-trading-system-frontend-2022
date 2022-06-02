@@ -2,7 +2,7 @@ import { LockOutlined } from "@ant-design/icons";
 import './AdminPage.css';
 import { Table, Button, Space, Modal, Descriptions, Switch, Input, InputNumber, message, Menu } from 'antd';
 import { Link } from 'react-router-dom'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import request from "../../utils/request";
 const { Column, ColumnGroup } = Table;
 
@@ -11,20 +11,17 @@ const data = [
     {
         id: '00000',
         name: 'SZS DataBase Co. Ltd',
-        price: 10,
-        number: 20098,
+        status: false
     },
     {
         id: '00001',
         name: 'ADS QSC Co. Ltd',
-        price: 5,
-        number: 12742,
+        status: true
     },
     {
         id: '00002',
         name: 'SEF Squad Co. Ltd',
-        price: 2,
-        number: 109832,
+        status: true
     },
 ]
 
@@ -74,52 +71,7 @@ const StockDataSell = [
     },
 ]
 
-// const columns = [
-//     {
-//         title:"股票编号",
-//         key:"id",
-//         dataIndex:"id",
-//         defaultSortOrder:"descend", 
-//         sorter:"(a, b) => a.id - b.id",
-//     },
-//     {
-//         title:"股票名称",
-//         key:"name",
-//         dataIndex:"name",
-//         defaultSortOrder:"descend",
-//         sorter:"(a, b) => a.name - b.name",
-//     },
-//     {
-//         title:"股票信息",
-//         children:[
-//             {
-//                 title:"最新成交价格",
-//                 key:"price",
-//                 dataIndex:"price",
-//                 defaultSortOrder:"descend",
-//                 sorter:"(a, b) => a.price - b.price",
-//             },
-//             {
-//                 title:"最新成交数量",
-//                 key:"number",
-//                 dataIndex:"number",
-//                 defaultSortOrder:"descend",
-//                 sorter:"(a, b) => a.number - b.number",
-//             },
-//         ]
-//     },
-//     {
-//         title:"Action",
-//         key:"action",
-//         render:() => (
-//             <Space size="middle">
-//             <a onClick={()=>{
-//                 showDetails();
-//             }} >详情</a>
-//             </Space>
-//         )
-//     },
-//   ];
+
 
 function AdminPage() {
     const [isDetailsVisible, setIsDetailsVisible] = useState(false);
@@ -129,7 +81,36 @@ function AdminPage() {
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [oldPassword, setOldPassword] = useState("");
-    const showDetails = () => {
+    const [stocks, setStocks] = useState([]);
+    const [stockName, setStockName] = useState("");
+    const [stockNewPrice, setStockNewPrice] = useState(0);
+    const [stockNewAmount, setStockNewAmount] = useState(0);
+    const [stockDataSell, setStockDataSell] = useState([]);
+    const [stckDataBuy, setStckDataBuy] = useState([]);
+    const [descStockId, setDescStockId] = useState("");
+    const [descStockName, setDescStockName] = useState("");
+    const [descNewPrice, setDescNewPrice] = useState(0);
+    const [descNewAmount, setDescNewAmount] = useState(0);
+    const showDetails = (id, name) => {
+        setDescStockId(id);
+        setDescStockName(name);
+        // request('/admin', "PUT", { 'Content-Type': 'application/json' },
+        //     {
+        //         "password": oldPassword,
+        //         "new_password": newPassword
+        //     }).then((response) => {
+        //         console.log(response);
+        //         if (response.code == '0') {
+        //             message.success("修改成功！");
+        //             //去掉token让他重新登录
+        //             localStorage.removeItem("token");
+
+        //             window.location.href = "./"
+        //         }
+        //         else {
+        //             alert(response.message);
+        //         }
+        //     })
         setIsDetailsVisible(true);
     };
 
@@ -152,12 +133,77 @@ function AdminPage() {
     const handlePwdCancel = () => {
         setIsPwdChangeVisible(false);
     };
+    const columns = [
+        {
+            title: "股票编号",
+            key: "id",
+            dataIndex: "id",
+            defaultSortOrder: "descend",
+            sorter: (a, b) => a.id - b.id,
+        },
+        {
+            title: "股票名称",
+            key: "name",
+            dataIndex: "name",
+        },
+        {
+            title: "Action",
+            key: "action",
+            render: (_, { status, id }) => (
+                <Space className="admin_space" size="middle">
+                    <a className="admin_detail" onClick={(id, name) => {
+                        showDetails(id, name);
+                    }} >详情</a>
+                    <Switch checkedChildren="开启交易" unCheckedChildren="暂停交易" defaultChecked={status}
+                        onChange={(newStatus) => {
+                            //todo 
+                            //     request('/admin', "PUT", { 'Content-Type': 'application/json' },
+                            // {
+                            //     "password": oldPassword,
+                            //     "new_password": newPassword
+                            // }).then((response) => {
+                            //     console.log(response);
+                            //     if (response.code == '0') {
+                            //         message.success("修改成功！");
+                            //         //去掉token让他重新登录
+                            //         localStorage.removeItem("token");
 
-    const changeSortOrder = (e) => {
-        setStockSortOrder(e);
-    }
+                            //         window.location.href = "./"
+                            //     }
+                            //     else {
+                            //         alert(response.message);
+                            //     }
+                            // })
 
-    console.log(stockSortOrder);
+                        }} />
+                </Space>
+            )
+        },
+    ];
+
+    const detailColumns = [
+        {
+            title: '股票价格',
+            key: 'price',
+            dataIndex: 'price',
+            sorter: (a, b) => a.price - b.price,
+            defaultSortOrder: { stockSortOrder },
+        },
+        {
+            title: "进入系统时间",
+            key: "time",
+            dataIndex: "time",
+        },
+        {
+            title: "股数",
+            key: "number",
+            dataIndex: "number"
+        },
+    ];
+    useEffect(() => {
+        //todo: 发请求并判断是否有错误
+
+    });
     return (
         <div className='admin_background'>
 
@@ -186,24 +232,8 @@ function AdminPage() {
             </Menu>
 
             <div className='admin_table_back'>
-                <Table dataSource={data} className="admin_table" bordered="true">
-                    <Column title="股票编号" dataIndex="id" defaultSortOrder="descend" sorter={(a, b) => a.id - b.id} />
-                    <Column title="股票名称" dataIndex="name" defaultSortOrder="descend" sorter={(a, b) => a.name - b.name} />
-                    <ColumnGroup title="股票信息">
-                        <Column title="最新成交价格" dataIndex="price" defaultSortOrder="descend" sorter={(a, b) => a.price - b.price} />
-                        <Column title="最新成交数量" dataIndex="number" defaultSortOrder="descend" sorter={(a, b) => a.number - b.number} />
-                    </ColumnGroup>
-                    <Column title="操作" key="action" width={200}
-                        render={() => (
-                            <Space size="middle">
-                                <a onClick={() => {
-                                    showDetails();
-                                }} >详情</a>
-                                <Switch checkedChildren="开启交易" unCheckedChildren="暂停交易" defaultChecked />
-                            </Space>
-                        )}
-                    />
-                </Table>
+                <Table dataSource={data} columns={columns} className="admin_table" bordered="true" />;
+
                 <Modal title="股票详情" width={800} visible={isDetailsVisible} onOk={() => handleOk()} onCancel={() => handleCancel()}
                     footer={[
                         <Button key="ok" type="primary" onClick={() => handleOk()}>
@@ -212,33 +242,48 @@ function AdminPage() {
                     ]}
                 >
                     <Descriptions bordered size="small">
-                        <Descriptions.Item label="股票名称">SEF Squad Co. Ltd</Descriptions.Item>
+                        <Descriptions.Item label="股票编号">00001</Descriptions.Item>
+                        <Descriptions.Item label="股票名称">SEF Squad Ctdo. L</Descriptions.Item>
+                        <br />
                         <Descriptions.Item label="最新交易价格">2</Descriptions.Item>
                         <Descriptions.Item label="最新交易数量">109832</Descriptions.Item>
                     </Descriptions>
-                    <Menu onClick={(e) => { setMenuCurrentChoose(e.key); changeSortOrder(e.key); }} selectedKeys={[MenuCurrentChoose]} mode="horizontal"
-                        items={[{
-                            label: (
-                                <a onClick={() => changeSortOrder()}>
-                                    买指令
-                                </a>
-                            ),
-                            key: "descend",
-                        },
-                        {
-                            label: (
-                                <a onClick={() => changeSortOrder()}>
-                                    卖指令
-                                </a>
-                            ),
-                            key: "ascend",
-                        }
-                        ]} />
-                    <Table dataSource={stockSortOrder == "descend" ? StockDataBuy : StockDataSell} sortDirections={stockSortOrder} className="admin_table" size="small" bordered="true">
+                    <Menu onClick={(e) => { setMenuCurrentChoose(e.key); setStockSortOrder(e.key); console.log(stockSortOrder) }} selectedKeys={[MenuCurrentChoose]} mode="horizontal"
+                        items={
+                            //     [{
+                            //     label: (
+                            //         <a onClick={(e) => changeSortOrder(e.key)}>
+                            //             买指令
+                            //         </a>
+                            //     ),
+                            //     key: "descend",
+                            // },
+                            // {
+                            //     label: (
+                            //         <a onClick={(e) => changeSortOrder(e.key)}>
+                            //             卖指令
+                            //         </a>
+                            //     ),
+                            //     key: "ascend",
+                            // }
+                            // ]
+                            [
+                                {
+                                    label: '买指令',
+                                    key: "descend"
+                                },
+                                {
+                                    label: '卖指令',
+                                    key: "ascend"
+                                }
+                            ]
+                        } />
+                    {/* <Table dataSource={stockSortOrder == "descend" ? StockDataBuy : StockDataSell} sortDirections={stockSortOrder} className="admin_table" size="small" bordered="true">
                         <Column title="股票价格" dataIndex="price" sortOrder={stockSortOrder} sorter={(a, b) => a.price - b.price} />
                         <Column title="进入系统时间" dataIndex="time" />
                         <Column title="股数" dataIndex="number" />
-                    </Table>
+                    </Table> */}
+                    <Table dataSource={stockSortOrder == "descend" ? StockDataBuy : StockDataSell} columns={detailColumns} className="admin_table" size="small" bordered="true" />;
                     <InputNumber addonBefore="最大涨幅"
                         style={{ width: '30%', marginTop: "1.5%" }}
                         defaultValue={0}
@@ -295,6 +340,7 @@ function AdminPage() {
                                             message.success("修改成功！");
                                             //去掉token让他重新登录
                                             localStorage.removeItem("token");
+
                                             window.location.href = "./"
                                         }
                                         else {
