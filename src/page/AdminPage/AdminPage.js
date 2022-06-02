@@ -133,10 +133,6 @@ function AdminPage() {
     const handlePwdCancel = () => {
         setIsPwdChangeVisible(false);
     };
-
-    const changeSortOrder = (e) => {
-        setStockSortOrder(e);
-    }
     const columns = [
         {
             title: "股票编号",
@@ -187,11 +183,11 @@ function AdminPage() {
 
     const detailColumns = [
         {
-            title: "股票价格",
-            key: "price",
-            dataIndex: "price",
-            defaultSortOrder: "descend",
+            title: '股票价格',
+            key: 'price',
+            dataIndex: 'price',
             sorter: (a, b) => a.price - b.price,
+            defaultSortOrder: { stockSortOrder },
         },
         {
             title: "进入系统时间",
@@ -204,7 +200,6 @@ function AdminPage() {
             dataIndex: "number"
         },
     ];
-    console.log(stockSortOrder);
     useEffect(() => {
         //todo: 发请求并判断是否有错误
 
@@ -253,30 +248,42 @@ function AdminPage() {
                         <Descriptions.Item label="最新交易价格">2</Descriptions.Item>
                         <Descriptions.Item label="最新交易数量">109832</Descriptions.Item>
                     </Descriptions>
-                    <Menu onClick={(e) => { setMenuCurrentChoose(e.key); changeSortOrder(e.key); }} selectedKeys={[MenuCurrentChoose]} mode="horizontal"
-                        items={[{
-                            label: (
-                                <a onClick={() => changeSortOrder()}>
-                                    买指令
-                                </a>
-                            ),
-                            key: "descend",
-                        },
-                        {
-                            label: (
-                                <a onClick={() => changeSortOrder()}>
-                                    卖指令
-                                </a>
-                            ),
-                            key: "ascend",
-                        }
-                        ]} />
+                    <Menu onClick={(e) => { setMenuCurrentChoose(e.key); setStockSortOrder(e.key); console.log(stockSortOrder) }} selectedKeys={[MenuCurrentChoose]} mode="horizontal"
+                        items={
+                            //     [{
+                            //     label: (
+                            //         <a onClick={(e) => changeSortOrder(e.key)}>
+                            //             买指令
+                            //         </a>
+                            //     ),
+                            //     key: "descend",
+                            // },
+                            // {
+                            //     label: (
+                            //         <a onClick={(e) => changeSortOrder(e.key)}>
+                            //             卖指令
+                            //         </a>
+                            //     ),
+                            //     key: "ascend",
+                            // }
+                            // ]
+                            [
+                                {
+                                    label: '买指令',
+                                    key: "descend"
+                                },
+                                {
+                                    label: '卖指令',
+                                    key: "ascend"
+                                }
+                            ]
+                        } />
                     {/* <Table dataSource={stockSortOrder == "descend" ? StockDataBuy : StockDataSell} sortDirections={stockSortOrder} className="admin_table" size="small" bordered="true">
                         <Column title="股票价格" dataIndex="price" sortOrder={stockSortOrder} sorter={(a, b) => a.price - b.price} />
                         <Column title="进入系统时间" dataIndex="time" />
                         <Column title="股数" dataIndex="number" />
                     </Table> */}
-                    <Table dataSource={stockSortOrder == "descend" ? StockDataBuy : StockDataSell} sortDirections={stockSortOrder} columns={detailColumns} className="admin_table" size="small" bordered="true" />;
+                    <Table dataSource={stockSortOrder == "descend" ? StockDataBuy : StockDataSell} columns={detailColumns} className="admin_table" size="small" bordered="true" />;
                     <InputNumber addonBefore="最大涨幅"
                         style={{ width: '30%', marginTop: "1.5%" }}
                         defaultValue={0}
