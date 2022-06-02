@@ -82,6 +82,7 @@ function StockPage() {
   const [Individual_EB, setIndiEB] = useState("");
   const [Individual_WorkPlace, setIndiWP] = useState("");
   const [Individual_Phone, setIndiPhone] = useState("");
+  const [DateString, setDateString] = useState("");
   const [isDetailsVisible1, setIsDetailsVisible1] = useState(false);
   const [Daiban, setIndiDaiBan] = useState("");
   var Datenow;
@@ -94,10 +95,15 @@ function StockPage() {
   const [LePerson_phone, setLePhone] = useState("");
   const [LePerson_address, setLeaddress] = useState("");
   const [LePerson_aurotity_name, setLeAuname] = useState("");
-  const [LePerson_EB, setLePEB] = useState("");
   const [aurotity_ID, setAuID] = useState("");
   const [aurotity_phone, setAuPhone] = useState("");
   const [aurotity_address, setAuaddress] = useState("");
+
+  const [code,setcode] = useState("");
+  const [newaccount, setnewaccount] = useState("");
+  const [newpass, setnewpass] = useState("");
+  const [oldaccount, setoldaccount] = useState("");
+  const [oldpass, setoldpass] = useState("");
 
   const showpage1 = () => {
     setIsDetailsVisible1(true);
@@ -109,7 +115,7 @@ function StockPage() {
         "password": Individual_stack_pass,
         "user_name": Individual_Name,
         "user_gender" : sex,
-        "registration_date" : Datenow,
+        "registration_date" : DateString,
         "user_id_number" : Individual_ID,
         "user_address" : Individual_Address,
         "user_job" : Individual_Profession,
@@ -122,12 +128,12 @@ function StockPage() {
       }).then((response) => {
         console.log(response);
         if (response.code == '0') {
-          window.location.href = "./stockadmin";
+          alert("注册成功！");
         }
         else {
           alert(response.message);
         }
-      })
+  })
     setIsDetailsVisible1(false);
   };
 
@@ -139,6 +145,30 @@ function StockPage() {
     setIsDetailsVisible2(true);
   }
   const handleOk2 = () => {
+    request('/account_admin/add_personal_securities_account', "POST", { 'Content-Type': 'application/json' },
+    {
+      "l_account_number": LePerson_account,
+      "password": LePerson_pass,
+      "legal_person_registration_number": Le_ID,
+      "business_license_number" : Bussiness_ID,
+      "legal_person_id_number" : LePerson_idaccount,
+      "legal_person_name" : LePerson_name,
+      "legal_person_telephone" : LePerson_phone,
+      "legal_person_address" : LePerson_address,
+      "excutor" : LePerson_aurotity_name,
+      "authorized_person_id_number" : aurotity_ID,
+      "authorized_person_telephone" : aurotity_phone,
+      "authorized_person_address" : aurotity_address,
+      "authority" : "N"
+    }).then((response) => {
+      console.log(response);
+      if (response.code == '0') {
+        alert("注册成功！");
+      }
+      else {
+        alert(response.message);
+      }
+})
     setIsDetailsVisible2(false);
   };
 
@@ -150,6 +180,76 @@ function StockPage() {
     setIsDetailsVisible3(true);
   }
   const handleOk3 = () => {
+    if(key == "1")
+    {
+      if(value_tab)
+      {
+        request('/account_admin/personal_security_freeze', "POST", { 'Content-Type': 'application/json' },
+        {
+          "id_num/legal_register_num" : code
+        }).then((response) => {
+          console.log(response);
+          if (response.code == '0') {
+            alert("挂失成功！");
+          }
+          else {
+            alert(response.message);
+          }
+    })
+    }
+    else
+    {
+      request('/account_admin/legal_person_security_freeze', "POST", { 'Content-Type': 'application/json' },
+        {
+          "id_num/legal_register_num" : code
+        }).then((response) => {
+          console.log(response);
+          if (response.code == '0') {
+            alert("挂失成功！");
+          }
+          else {
+            alert(response.message);
+          }
+    })
+    }
+  }
+  else
+  {
+    if(value_tab)
+      {
+        request('/account_admin/re_add_personal_securities_account', "POST", { 'Content-Type': 'application/json' },
+        {
+          "user_id_number" : code,
+          "p_account_number" : newaccount,
+          "password" : newpass
+        }).then((response) => {
+          console.log(response);
+          if (response.code == '0') {
+            alert("办理成功！");
+          }
+          else {
+            alert(response.message);
+          }
+    })
+    }
+    else
+    {
+      request('/account_admin/re_add_legal_person_securities_account', "POST", { 'Content-Type': 'application/json' },
+        {
+          "legal_person_registration_number" : code,
+          "l_account_number" : newaccount,
+          "password" : newpass
+        }).then((response) => {
+          console.log(response);
+          if (response.code == '0') {
+            alert("办理成功！");
+          }
+          else {
+            alert(response.message);
+          }
+    })
+    }
+  }
     setIsDetailsVisible3(false);
   };
 
@@ -161,6 +261,19 @@ function StockPage() {
     setIsDetailsVisible4(true);
   }
   const handleOk4 = () => {
+    request('/account_admin/fund_delete', "POST", { 'Content-Type': 'application/json' },
+        {
+          "id_num/legal_register_num" : oldaccount,
+          "security_num" : oldpass
+        }).then((response) => {
+          console.log(response);
+          if (response.code == '0') {
+            alert("销户成功！");
+          }
+          else {
+            alert(response.message);
+          }
+    })
     setIsDetailsVisible4(false);
   };
 
@@ -179,8 +292,7 @@ function StockPage() {
     setValue2(e.target.value);
   };
   const onChange3 = (date, dateString) => {
-    console.log(date, dateString);
-    Datenow = Number(dateString.split('-'));
+    setDateString(dateString);
   };
   const { TabPane } = Tabs;
   const onChange_Tab = (key) => {
@@ -340,31 +452,52 @@ function StockPage() {
         }} />
         <br />
         <br />
-        <Input placeholder="法定代表人身份证号码" prefix={<IdcardOutlined />} maxLength={18} />
+        <Input placeholder="法定代表人身份证号码" prefix={<IdcardOutlined />} maxLength={18}
+        onChange={(event) => {
+          setLeidaccount(event.target.value);
+        }} />
         <br />
         <br />
-        <Input placeholder="法人姓名" prefix={<UserOutlined />} />
+        <Input placeholder="法人姓名" prefix={<UserOutlined />} 
+        onChange={(event) => {
+          setLename(event.target.value);
+        }} />
         <br />
         <br />
-        <Input placeholder="法人联系电话" prefix={<PhoneOutlined />} />
+        <Input placeholder="法人联系电话" prefix={<PhoneOutlined />} 
+        onChange={(event) => {
+          setLePhone(event.target.value);
+        }} />
         <br />
         <br />
-        <Input placeholder="法人联系地址" prefix={<HomeOutlined />} />
+        <Input placeholder="法人联系地址" prefix={<HomeOutlined />}
+        onChange={(event) => {
+          setLeaddress(event.target.value);
+        }}  />
         <br />
         <br />
-        <Input placeholder="法定代表人授予证券交易执行人姓名" prefix={<UserOutlined />} />
+        <Input placeholder="法定代表人授予证券交易执行人姓名" prefix={<UserOutlined />} 
+        onChange={(event) => {
+          setLeAuname(event.target.value);
+        }} />
         <br />
         <br />
-        <Input placeholder="用户学历" prefix={<UserOutlined />} />
+        <Input placeholder="授权人身份证号码" prefix={<IdcardOutlined />} maxLength={15}
+        onChange={(event) => {
+          setAuID(event.target.value);
+        }} />
         <br />
         <br />
-        <Input placeholder="授权人身份证号码" prefix={<IdcardOutlined />} maxLength={15} />
+        <Input placeholder="授权人联系电话" prefix={<PhoneOutlined />}
+        onChange={(event) => {
+          setAuPhone(event.target.value);
+        }} />
         <br />
         <br />
-        <Input placeholder="授权人联系电话" prefix={<PhoneOutlined />} />
-        <br />
-        <br />
-        <Input placeholder="授权地址" prefix={<HomeOutlined />} />
+        <Input placeholder="授权地址" prefix={<HomeOutlined />}
+        onChange={(event) => {
+          setAuaddress(event.target.value);
+        }} />
         <br />
         <br />
       </Modal>
@@ -377,7 +510,10 @@ function StockPage() {
             </Radio.Group>
             <br />
             <br />
-            <Input placeholder="个人用户身份证号或法人注册登记号" prefix={<UserOutlined />} maxLength={18} />
+            <Input placeholder="个人用户身份证号或法人注册登记号" prefix={<UserOutlined />} maxLength={18} 
+            onChange={(event) => {
+              setcode(event.target.value);
+            }}/>
 
           </TabPane>
           <TabPane tab="补办证券账户" key="2">
@@ -387,21 +523,36 @@ function StockPage() {
             </Radio.Group>
             <br />
             <br />
-            <Input placeholder="个人用户身份证号或法人注册登记号" prefix={<UserOutlined />} maxLength={18} />
+            <Input placeholder="个人用户身份证号或法人注册登记号" prefix={<UserOutlined />} maxLength={18} 
+            onChange={(event) => {
+              setcode(event.target.value);
+            }}/>
             <br />
             <br />
-            <Input placeholder="新证券账户号码" prefix={<KeyOutlined />} maxLength={18} />
+            <Input placeholder="新证券账户号码" prefix={<KeyOutlined />} maxLength={18} 
+            onChange={(event) => {
+              setnewaccount(event.target.value);
+            }}/>
             <br />
             <br />
-            <Input placeholder="新证券账户密码" prefix={<UserOutlined />} maxLength={6} />
+            <Input placeholder="新证券账户密码" prefix={<UserOutlined />} maxLength={6} 
+            onChange={(event) => {
+              setnewpass(event.target.value);
+            }}/>
           </TabPane>
         </Tabs>
       </Modal>
       <Modal title="销户证券账户" width={800} visible={isDetailsVisible4} onOk={handleOk4} onCancel={handleCancel4}>
-        <Input placeholder="证券账户号码" prefix={<UserOutlined />} maxLength={18} />
+        <Input placeholder="证券账户号码" prefix={<UserOutlined />} maxLength={18} 
+        onChange={(event) => {
+          setoldaccount(event.target.value);
+        }}/>
         <br />
         <br />
-        <Input placeholder="法人注册登记号码或个人身份证号" prefix={<UserOutlined />} maxLength={18} />
+        <Input placeholder="法人注册登记号码或个人身份证号" prefix={<UserOutlined />} maxLength={18} 
+        onChange={(event) => {
+          setoldpass(event.target.value);
+        }}/>
         <br />
         <br />
       </Modal>
