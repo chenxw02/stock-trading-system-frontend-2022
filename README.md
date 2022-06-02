@@ -49,7 +49,7 @@ Windows 安装方法自行上网搜索。或者从微软商店安装一个 WSL�
 
 ### 依赖
 
-除 react 基本包以外，你还需要 react-router-dom 和 antd，在项目根目录运行如下命令：
+除 react 基本包以外，你还需要 react-router-dom 和 antd，（更新2022.6.2：A4加入组绘图组件库echarts），在项目根目录运行如下命令：
 
 ```shell
 npm add react-router-dom
@@ -59,6 +59,8 @@ npm install @ant-design/pro-table
 npm install jquery
 // 如果你启动时遇到Error: Package path ./helpers/esm/regeneratorRuntime is not exported，请安装如下依赖
 npm add @babel/runtime@^7.18.0
+npm install echarts
+//（更新2022.6.2：A4加入组绘图组件库echarts）
 ```
 
 依赖配置完毕后，在根目录运行`npm start`，访问 localhost:3000 即可。
