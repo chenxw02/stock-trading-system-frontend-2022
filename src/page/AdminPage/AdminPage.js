@@ -86,11 +86,13 @@ function AdminPage() {
     const [stockNewPrice, setStockNewPrice] = useState(0);
     const [stockNewAmount, setStockNewAmount] = useState(0);
     const [stockDataSell, setStockDataSell] = useState([]);
-    const [stckDataBuy, setStckDataBuy] = useState([]);
+    const [stockDataBuy, setStockDataBuy] = useState([]);
     const [descStockId, setDescStockId] = useState("");
     const [descStockName, setDescStockName] = useState("");
     const [descNewPrice, setDescNewPrice] = useState(0);
     const [descNewAmount, setDescNewAmount] = useState(0);
+    const [riseThreshold, setRiseThreshold] = useState(0);
+    const [fallThreshold, setFallThreshold] = useState(0);
     const showDetails = (id, name) => {
         setDescStockId(id);
         setDescStockName(name);
@@ -297,7 +299,25 @@ function AdminPage() {
                         formatter={value => `${Number(value).toFixed(2)}%`}
                         parser={value => value.replace('%', '')} />
                     <Button type="primary" style={{ width: '10%', marginTop: "1.5%", marginLeft: "10%" }}
-                        onClick={() => { message.success("设置成功"); }}>
+                        onClick={() => { 
+                            request('/admin/stock_threshold', "PUT", 
+                                { 'Content-Type': 'application/json',
+                                'Authorization':localStorage.getItem('token') },
+                                {
+                                    "stock_id": descStockId,
+                                    "rise_threshold": riseThreshold,
+                                    "fall_threshold": fallThreshold
+                                }).then((response) => {
+                                    console.log(response);
+                                    //虽然下面这个If分支毫无意义，但是为了展现代码结构，我还是保留着了
+                                    if (response.code == '0') {
+                                        alert(response.message);
+                                    }
+                                    else {
+                                        alert(response.message);
+                                    }
+                                })
+                         }}>
                         设置
                     </Button>,
                 </Modal>
