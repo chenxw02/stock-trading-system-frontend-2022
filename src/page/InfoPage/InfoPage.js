@@ -140,26 +140,39 @@ function InfoPage() {
                     setPassword(event.target.value);
                 }}
             />
-
+            {/*修改于2022/6/3，增加边界值判断*/}
             <Button type="primary" size="large" className="login_button"
                 onClick={() => {
-                    request('/query_user/login', "POST", { 'Content-Type': 'application/json' },
-                        {
-                            "ID": ID,
-                            "password": Password
-                        }).then((response) => {
-                            console.log(response);
-                            if (response.code == '0') {
-                                /*console.log(response.data.type);*/
-                                if (response.data.type == "H")
-                                    navigate('/queryresult', { state: { ID: response.data.user_id, Authority: "高级" } })
-                                else
-                                    navigate('/queryresult', { state: { ID: response.data.user_id, Authority: "普通" } })
-                            }
-                            else {
-                                alert(response.message);
-                            }
-                        })
+                    if (ID.length > 20) {
+                        alert("账户不能超过20位！")
+                    } else if (ID.length == 0) {
+                        alert("账户不能为空！")
+                    } else if (Password.length > 20) {
+                        alert("密码不能超过20位！")
+                    } else if (Password.length == 0) {
+                        alert("密码不能为空！")
+                    } else if (/.*[\u4e00-\u9fa5]+.*$/.test(Password)) {
+                        alert("密码含有中文！")
+                    } else {
+                        request('/query_user/login', "POST", { 'Content-Type': 'application/json' },
+                            {
+                                "ID": ID,
+                                "password": Password
+                            }).then((response) => {
+                                console.log(response);
+                                if (response.code == '0') {
+                                    /*console.log(response.data.type);*/
+                                    if (response.data.type == "H")
+                                        navigate('/queryresult', { state: { ID: response.data.user_id, Authority: "高级" } })
+                                    else
+                                        navigate('/queryresult', { state: { ID: response.data.user_id, Authority: "普通" } })
+                                }
+                                else {
+                                    alert(response.message);
+                                }
+                            })
+                    }
+                    
                 }}
             > 登录</Button>
 
@@ -266,46 +279,51 @@ function QueryResult() {
                             type="primary"
                             size="large"
                             onClick={() => {
-                                data.length = 0;
-                                request('/release_search', "POST", { 'Content-Type': 'application/json' },
-                                    {
-                                        "content": Stock,
-                                    }).then((response) => {
-                                        console.log(response);
-                                        if (response.code == '0') {
-                                            var descrip = '';
-                                            var n = 0;
-                                            for (let i = 0; i <= response.data.length; i++) {
-                                                descrip = "交易日期:" + handledate(response.data[i].transaction_date) + " 交易时间:" + handletime(response.data[i].transaction_time) + " 交易数量:"
-                                                    + response.data[i].transaction_number + " 交易单价:" + response.data[i].transaction_price + " 交易总额:" + response.data[i].transaction_amount;
-                                                data.push({
-                                                    key: i,
-                                                    stockname: response.data[i].stock_name,
-                                                    stockid: response.data[i].stock_id,
-                                                    pricestart: response.data[i].start_price,
-                                                    priceend: response.data[i].end_price,
-                                                    pricehigh: response.data[i].highest_price,
-                                                    pricelow: response.data[i].lowest_price,
-                                                })
-                                                while (response.data[i + 1].stock_id == response.data[i].stock_id) {
-                                                    i++;
-                                                    descrip += '\n' + "交易日期:" + handledate(response.data[i].transaction_date) + " 交易时间:" + handletime(response.data[i].transaction_time) + " 交易数量:"
+                                {/*修改于2022/6/3，增加边界值判断*/ }
+                                {/*中文、英文、数字为合法输入*/ }
+                                if (!/.*[\u4e00-\u9fa50-9a-zA-Z]+.*$/.test(Stock)) {
+                                    alert("查询输入含有非法字符！")
+                                } else {
+                                    data.length = 0;
+                                    request('/release_search', "POST", { 'Content-Type': 'application/json' },
+                                        {
+                                            "content": Stock,
+                                        }).then((response) => {
+                                            console.log(response);
+                                            if (response.code == '0') {
+                                                var descrip = '';
+                                                var n = 0;
+                                                for (let i = 0; i <= response.data.length; i++) {
+                                                    descrip = "交易日期:" + handledate(response.data[i].transaction_date) + " 交易时间:" + handletime(response.data[i].transaction_time) + " 交易数量:"
                                                         + response.data[i].transaction_number + " 交易单价:" + response.data[i].transaction_price + " 交易总额:" + response.data[i].transaction_amount;
-                                                    if (i == response.data.length - 1) {
-                                                        break;
+                                                    data.push({
+                                                        key: i,
+                                                        stockname: response.data[i].stock_name,
+                                                        stockid: response.data[i].stock_id,
+                                                        pricestart: response.data[i].start_price,
+                                                        priceend: response.data[i].end_price,
+                                                        pricehigh: response.data[i].highest_price,
+                                                        pricelow: response.data[i].lowest_price,
+                                                    })
+                                                    while (response.data[i + 1].stock_id == response.data[i].stock_id) {
+                                                        i++;
+                                                        descrip += '\n' + "交易日期:" + handledate(response.data[i].transaction_date) + " 交易时间:" + handletime(response.data[i].transaction_time) + " 交易数量:"
+                                                            + response.data[i].transaction_number + " 交易单价:" + response.data[i].transaction_price + " 交易总额:" + response.data[i].transaction_amount;
+                                                        if (i == response.data.length - 1) {
+                                                            break;
+                                                        }
                                                     }
+                                                    data[n].description = descrip;
+                                                    n++;
+                                                    console.log(descrip);
                                                 }
-                                                data[n].description = descrip;
-                                                n++;
-                                                console.log(descrip);
                                             }
-                                        }
-                                        else {
-                                            alert(response.message);
-                                        }
-                                    })
-                                navigate('/queryresult', { state: { ID: ID, Authority: Authority, Stock: Stock } });
-
+                                            else {
+                                                alert(response.message);
+                                            }
+                                        })
+                                    navigate('/queryresult', { state: { ID: ID, Authority: Authority, Stock: Stock } });
+                                }                              
                             }}
                         >查询</Button>
                     </Col>
@@ -357,11 +375,23 @@ function Register() {
                     setRePassword(event.target.value);
                 }}
             />
+            {/*修改于2022/6/3，增加边界值判断*/}
             <Button type="primary" size="large" className="login_button"
                 onClick={() => {
-                    if (Password != RePassword) {
+                    if (ID.length > 20) {
+                        alert("账户不能超过20位！")
+                    } else if (ID.length == 0) {
+                        alert("账户不能为空！")
+                    } else if (Password != RePassword) {
                         alert("两次输入密码不同！")
-                    } else {
+                    } else if (Password.length > 20) {
+                        alert("密码不能超过20位！")
+                    } else if (Password.length == 0){
+                        alert("密码不能为空")
+                    } else if (/.*[\u4e00-\u9fa5]+.*$/.test(Password)) {
+                        alert("密码含有中文！")
+                    }
+                    else {
                         request('/query_user/register', "POST", { 'Content-Type': 'application/json' },
                             {
                                 "ID": ID,
@@ -468,23 +498,33 @@ function Change() {
                     setNewPassword(event.target.value);
                 }}
             />
-
+            {/*修改于2022/6/3，增加边界值判断*/}
             <Button type="primary" size="large" className="login_button"
                 onClick={() => {
-                    request('/query_user/modify', "POST", { 'Content-Type': 'application/json' },
-                        {
-                            "ID": ID,
-                            "password": Password,
-                            "re_password": NewPassword
-                        }).then((response) => {
-                            if (response.code == '0') {
-                                alert("修改成功");
-                                navigate('/info')
-                            }
-                            else {
-                                alert(response.message);
-                            }
-                        })
+                    if (Password != NewPassword) {
+                        alert("两次输入密码不同！")
+                    } else if (Password.length > 20) {
+                        alert("密码不能超过20位！")
+                    } else if (Password.length == 0) {
+                        alert("密码不能为空！")
+                    } else if (/.*[\u4e00-\u9fa5]+.*$/.test(Password)) {
+                        alert("密码含有中文！")
+                    } else {
+                        request('/query_user/modify', "POST", { 'Content-Type': 'application/json' },
+                            {
+                                "ID": ID,
+                                "password": Password,
+                                "re_password": NewPassword
+                            }).then((response) => {
+                                if (response.code == '0') {
+                                    alert("修改成功");
+                                    navigate('/info')
+                                }
+                                else {
+                                    alert(response.message);
+                                }
+                            })
+                    }                  
                 }}
             > 确认</Button>
         </div>
