@@ -9,44 +9,46 @@ const { Column, ColumnGroup } = Table;
 
 const data = [
     {
-        id: '00000',
-        name: 'SZS DataBase Co. Ltd',
-        status: false
+        "status": "T",
+        "stock_id": "a111",
+        "stock_name": "test1"
     },
     {
-        id: '00001',
-        name: 'ADS QSC Co. Ltd',
-        status: true
+        "status": "T",
+        "stock_id": "a112",
+        "stock_name": "test2"
     },
     {
-        id: '00002',
-        name: 'SEF Squad Co. Ltd',
-        status: true
+        "status": "F",
+        "stock_id": "a113",
+        "stock_name": "test3"
     },
 ]
 
-const StockDataBuy = [
-    {
-        price: 2.00,
-        time: "2022-5-12 20:38:31",
-        number: 10000,
-    },
-    {
-        price: 2.31,
-        time: "2022-5-11 19:08:11",
-        number: 13400,
-    },
-    {
-        price: 1.98,
-        time: "2022-5-10 07:08:25",
-        number: 9820,
-    },
-    {
-        price: 2.03,
-        time: "2022-5-11 17:54:01",
-        number: 6823,
-    },
-]
+const
+
+    StockDataBuy = [
+        {
+            price: 2.00,
+            time: "2022-5-12 20:38:31",
+            number: 10000,
+        },
+        {
+            price: 2.31,
+            time: "2022-5-11 19:08:11",
+            number: 13400,
+        },
+        {
+            price: 1.98,
+            time: "2022-5-10 07:08:25",
+            number: 9820,
+        },
+        {
+            price: 2.03,
+            time: "2022-5-11 17:54:01",
+            number: 6823,
+        },
+    ]
 
 const StockDataSell = [
     {
@@ -71,6 +73,10 @@ const StockDataSell = [
     },
 ]
 
+const testdata = {
+    "latest_amount": 2,
+    "latest_price": 12.11
+}
 
 
 function AdminPage() {
@@ -85,8 +91,8 @@ function AdminPage() {
     const [stockName, setStockName] = useState("");
     const [stockNewPrice, setStockNewPrice] = useState(0);
     const [stockNewAmount, setStockNewAmount] = useState(0);
-    const [stockDataSell, setStockDataSell] = useState([]);
-    const [stockDataBuy, setStockDataBuy] = useState([]);
+    const [stockDataSell, setStockDataSell] = useState(StockDataSell);
+    const [stockDataBuy, setStockDataBuy] = useState(StockDataBuy);
     const [descStockId, setDescStockId] = useState("");
     const [descStockName, setDescStockName] = useState("");
     const [descNewPrice, setDescNewPrice] = useState(0);
@@ -96,23 +102,57 @@ function AdminPage() {
     const showDetails = (id, name) => {
         setDescStockId(id);
         setDescStockName(name);
-        // request('/admin', "PUT", { 'Content-Type': 'application/json' },
-        //     {
-        //         "password": oldPassword,
-        //         "new_password": newPassword
-        //     }).then((response) => {
-        //         console.log(response);
-        //         if (response.code == '0') {
-        //             message.success("修改成功！");
-        //             //去掉token让他重新登录
-        //             localStorage.removeItem("token");
+        request('/admin/latest_transaction', "GET",
+            {
+                'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem('token')
+            },
+            {
+                "stock_id": descStockId,
+            }).then((response) => {
+                if (response.code == '0') {
+                    setStockNewPrice(response.data.latest_amount);
+                    setStockNewAmount(response.data.latest_price);
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        request('/admin/instruction', "GET",
+            {
 
-        //             window.location.href = "./"
-        //         }
-        //         else {
-        //             alert(response.message);
-        //         }
-        //     })
+                'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem('token')
+            },
+            {
+                "buy_or_sell": "B",
+                "stock_id": descStockId,
+            }).then((response) => {
+                if (response.code == '0') {
+                    setStockDataBuy(response.data);
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+        request('/admin/instruction', "GET",
+            {
+
+                'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem('token')
+            },
+            {
+                "buy_or_sell": "S",
+                "stock_id": descStockId,
+            }).then((response) => {
+                if (response.code == '0') {
+                    setStockDataSell(response.data);
+                }
+                else {
+                    alert(response.message);
+                }
+            });
+
         setIsDetailsVisible(true);
     };
 
@@ -138,45 +178,42 @@ function AdminPage() {
     const columns = [
         {
             title: "股票编号",
-            key: "id",
-            dataIndex: "id",
+            key: "stock_id",
+            dataIndex: "stock_id",
             defaultSortOrder: "descend",
             sorter: (a, b) => a.id - b.id,
         },
         {
             title: "股票名称",
-            key: "name",
-            dataIndex: "name",
+            key: "stock_name",
+            dataIndex: "stock_name",
         },
         {
             title: "Action",
             key: "action",
-            render: (_, { status, id }) => (
+            render: (_, { status, stock_id, stock_name }) => (
                 <Space className="admin_space" size="middle">
-                    <a className="admin_detail" onClick={(id, name) => {
-                        showDetails(id, name);
+                    <a className="admin_detail" onClick={() => {
+                        showDetails(stock_id, stock_name);
                     }} >详情</a>
-                    <Switch checkedChildren="开启交易" unCheckedChildren="暂停交易" defaultChecked={status}
-                        onChange={(newStatus) => {
-                            //todo 
-                            //     request('/admin', "PUT", { 'Content-Type': 'application/json' },
-                            // {
-                            //     "password": oldPassword,
-                            //     "new_password": newPassword
-                            // }).then((response) => {
-                            //     console.log(response);
-                            //     if (response.code == '0') {
-                            //         message.success("修改成功！");
-                            //         //去掉token让他重新登录
-                            //         localStorage.removeItem("token");
-
-                            //         window.location.href = "./"
-                            //     }
-                            //     else {
-                            //         alert(response.message);
-                            //     }
-                            // })
-
+                    <Switch checkedChildren="开启交易" unCheckedChildren="暂停交易" defaultChecked={status == "T" ? true : false}
+                        onClick={(checked) => {
+                            request('/admin/stock_status', "PUT",
+                                {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': localStorage.getItem('token')
+                                },
+                                {
+                                    "stock_id": stock_id,
+                                    "stock_status": checked
+                                }).then((response) => {
+                                    if (response.code == '102') {
+                                        window.location.href = "./";
+                                    }
+                                    else if (response.code != '0') {
+                                        alert(response.message);
+                                    }
+                                })
                         }} />
                 </Space>
             )
@@ -204,6 +241,24 @@ function AdminPage() {
     ];
     useEffect(() => {
         //todo: 发请求并判断是否有错误
+        request('/admin/permission', "GET",
+            {
+                'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem('token')
+            }
+        ).then((response) => {
+            console.log(response);
+            //虽然下面这个If分支毫无意义，但是为了展现代码结构，我还是保留着了
+            if (response.code == '0') {
+                setStocks(response.data);
+            }
+            else if (response.code == '102') {
+                window.location.href = "./";
+            }
+            else {
+                alert(response.message);
+            }
+        })
 
     });
     return (
@@ -234,7 +289,9 @@ function AdminPage() {
             </Menu>
 
             <div className='admin_table_back'>
-                <Table dataSource={data} columns={columns} className="admin_table" bordered="true" />;
+                <Table dataSource={data}
+                    //等等data可以改成stocks
+                    columns={columns} className="admin_table" bordered="true" />;
 
                 <Modal title="股票详情" width={800} visible={isDetailsVisible} onOk={() => handleOk()} onCancel={() => handleCancel()}
                     footer={[
@@ -244,31 +301,14 @@ function AdminPage() {
                     ]}
                 >
                     <Descriptions bordered size="small">
-                        <Descriptions.Item label="股票编号">00001</Descriptions.Item>
-                        <Descriptions.Item label="股票名称">SEF Squad Ctdo. L</Descriptions.Item>
+                        <Descriptions.Item label="股票编号">{descStockId}</Descriptions.Item>
+                        <Descriptions.Item label="股票名称">{descStockName}</Descriptions.Item>
                         <br />
-                        <Descriptions.Item label="最新交易价格">2</Descriptions.Item>
-                        <Descriptions.Item label="最新交易数量">109832</Descriptions.Item>
+                        <Descriptions.Item label="最新交易价格">{stockNewPrice}</Descriptions.Item>
+                        <Descriptions.Item label="最新交易数量">{stockNewAmount}</Descriptions.Item>
                     </Descriptions>
                     <Menu onClick={(e) => { setMenuCurrentChoose(e.key); setStockSortOrder(e.key); console.log(stockSortOrder) }} selectedKeys={[MenuCurrentChoose]} mode="horizontal"
                         items={
-                            //     [{
-                            //     label: (
-                            //         <a onClick={(e) => changeSortOrder(e.key)}>
-                            //             买指令
-                            //         </a>
-                            //     ),
-                            //     key: "descend",
-                            // },
-                            // {
-                            //     label: (
-                            //         <a onClick={(e) => changeSortOrder(e.key)}>
-                            //             卖指令
-                            //         </a>
-                            //     ),
-                            //     key: "ascend",
-                            // }
-                            // ]
                             [
                                 {
                                     label: '买指令',
@@ -285,7 +325,7 @@ function AdminPage() {
                         <Column title="进入系统时间" dataIndex="time" />
                         <Column title="股数" dataIndex="number" />
                     </Table> */}
-                    <Table dataSource={stockSortOrder == "descend" ? StockDataBuy : StockDataSell} columns={detailColumns} className="admin_table" size="small" bordered="true" />;
+                    <Table dataSource={stockSortOrder == "descend" ? stockDataBuy : stockDataSell} columns={detailColumns} className="admin_table" size="small" bordered="true" />;
                     <InputNumber addonBefore="最大涨幅"
                         style={{ width: '30%', marginTop: "1.5%" }}
                         defaultValue={0}
@@ -299,25 +339,27 @@ function AdminPage() {
                         formatter={value => `${Number(value).toFixed(2)}%`}
                         parser={value => value.replace('%', '')} />
                     <Button type="primary" style={{ width: '10%', marginTop: "1.5%", marginLeft: "10%" }}
-                        onClick={() => { 
-                            request('/admin/stock_threshold', "PUT", 
-                                { 'Content-Type': 'application/json',
-                                'Authorization':localStorage.getItem('token') },
+                        onClick={() => {
+                            request('/admin/stock_threshold', "PUT",
+                                {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': localStorage.getItem('token')
+                                },
                                 {
                                     "stock_id": descStockId,
                                     "rise_threshold": riseThreshold,
                                     "fall_threshold": fallThreshold
                                 }).then((response) => {
-                                    console.log(response);
+
                                     //虽然下面这个If分支毫无意义，但是为了展现代码结构，我还是保留着了
-                                    if (response.code == '0') {
-                                        alert(response.message);
+                                    if (response.code == '102') {
+                                        window.location.href = "./";
                                     }
-                                    else {
+                                    else if (response.code != '0') {
                                         alert(response.message);
                                     }
                                 })
-                         }}>
+                        }}>
                         设置
                     </Button>,
                 </Modal>
@@ -350,7 +392,11 @@ function AdminPage() {
                     <Button type="primary" style={{ width: '20%', marginTop: "3%", marginLeft: "75%" }}
                         onClick={() => {
                             if (newPassword == confirmPassword) {
-                                request('/admin', "PUT", { 'Content-Type': 'application/json' },
+                                request('/admin', "PUT",
+                                    {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': localStorage.getItem('token')
+                                    },
                                     {
                                         "password": oldPassword,
                                         "new_password": newPassword
@@ -360,8 +406,10 @@ function AdminPage() {
                                             message.success("修改成功！");
                                             //去掉token让他重新登录
                                             localStorage.removeItem("token");
-
                                             window.location.href = "./"
+                                        }
+                                        else if (response.code == '102') {
+                                            window.location.href = "./";
                                         }
                                         else {
                                             alert(response.message);
