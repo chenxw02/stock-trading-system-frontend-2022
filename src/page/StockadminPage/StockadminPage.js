@@ -1,104 +1,106 @@
 import { Layout, Descriptions,Badge, Table,Tabs,Space,Tag} from 'antd';
-import React from 'react';
+import React,{useState}from 'react';
 import Head from './Head';
 const {Footer,Content} = Layout;
   const { TabPane } = Tabs;
-
 function callback(key) {
   console.log(key);
 }
 
-const columns = [
-  {
-    title: '编号',
-      dataIndex: 'id_1',
-      key: 'id_1',
-  },
-    {
-      title: '证券账号',
-      dataIndex: 'stock',
-      key: 'stock',
-    },
-    {
-      title: '用户身份证号',
-      dataIndex: 'id',
-      key: 'id',
-    },
-    {
-      title:'事件',
-      dataIndex: 'event',
-      key: 'event',
-    },
-    {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: tags => (
-        <>
-          {tags.map(tag => {
-            let color ;
-            if (tag === 'pass') {
-              color = 'green';
-            }
-            else if(tag==='fail')
-            {
-                color='red';
-            }
-            else if(tag==='provisional')
-            {
-                color='yellow';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (text, record) => (
-        <Space size="middle">
-          <a>通过</a>
-          <a>不通过</a>
-        </Space>
-      ),
-    },
-  ];
-  
-  const data = [
-    {
-      key: '1',
-      id_1:'1',
-      stock: '43124',
-      id: 32455436,
-      event:'销户',
-      tags: ['pass'],
-    },
-    {
-        key: '2',
-        id_1:'2',
-        stock: '35423',
-        id: 532453434,
-        event:'开户',
-        tags: ['fail'],
-    },
-    {
-        key: '3',
-        id_1:'3',
-        stock: '34324',
-        id: 23413244,
-        event:'开户',
-        tags: ['provisional'],
-    },
-  ];
   
 function MoneyPage() {
+     const [ifapproval,setapproval]=useState("1");
+    const shenpi1=(e,r)=>
+     {
+      console.log(r["id_1"]);
+       setapproval(e);
+     };
+     const shenpi2=(e,r)=>
+     {
+      console.log(e);
+       setapproval(e);
+     };
+     const columns = [
+      {
+        title: '编号',
+          dataIndex: 'id_1',
+          key: 'id_1',
+      },
+        {
+          title: '证券账号',
+          dataIndex: 'stock',
+          key: 'stock',
+        },
+        {
+          title: '用户身份证号',
+          dataIndex: 'id',
+          key: 'id',
+        },
+        {
+          title: 'Tags',
+          key: 'tags',
+          dataIndex: 'tags',
+          render: tags => (
+            <>
+              {tags.map(tag => {
+                let color ;
+                if (tag === 'pass') {
+                  color = 'green';
+                }
+                else if(tag==='fail')
+                {
+                    color='red';
+                }
+                else if(tag==='provisional')
+                {
+                    color='yellow';
+                }
+                return (
+                  <Tag color={color} key={tag}>
+                    {tag.toUpperCase()}
+                  </Tag>
+                );
+              })}
+            </>
+          ),
+        },
+        {
+          title: 'Action',
+          key: 'action',
+          render: (text, record) => (
+            <Space size="middle">
+              <a  onClick={() =>shenpi1(1,record)}>通过</a>
+              <a onClick={() =>shenpi2(0,record)}>不通过</a>
+            </Space>
+          ),
+        },
+      ];
+      
+      const data = [
+        {
+          key: '1',
+          id_1:'1',
+          stock: '43124',
+          id: 32455436,
+          tags: ['pass'],
+        },
+        {
+            key: '2',
+            id_1:'2',
+            stock: '35423',
+            id: 532453434,
+            tags: ['fail'],
+        },
+        {
+            key: '3',
+            id_1:'3',
+            stock: '34324',
+            id: 23413244,
+            tags: ['provisional'],
+        },
+      ];
     return(
-
+       
         <div>
             <Head keyValue="2"/>
       <div className="Stockadmin_site-layout-content">

@@ -1,8 +1,8 @@
 import Head from './Head.js';
 import './TradePage.css';
 import React, { useState, useRef, useEffect } from 'react';
-import { Card, Descriptions, Badge, Table, Tabs, Space, Tag, Statistic, Row, Col, Input, Drawer, ConfigProvider, Button, Modal, Popover, message, Popconfirm } from 'antd';
-import { ArrowUpOutlined, ArrowDownOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Card, Descriptions, Badge, Table, Radio,Tabs, Space, Tag, Statistic, Row, Col, Input, Drawer, ConfigProvider, Button, Modal, Popover, message, Popconfirm } from 'antd';
+import { ArrowUpOutlined, ArrowDownOutlined, ReloadOutlined,KeyOutlined,UserOutlined} from '@ant-design/icons';
 import { hrHRIntl } from '@ant-design/pro-provider';
 import request from "../../utils/request";
 import { render } from '@testing-library/react';
@@ -472,7 +472,47 @@ const withdraw_full = [
 
 //主函数
 function TradePage() {
-
+	const [fund_account_number, setfund_account_number] = useState("");//A1组进行修改
+	const [id_num_legal_register_num, setid_num_legal_register_num] = useState("");//A1组进行修改
+	const [value_password, setValue_password] = useState(false);//A1组进行修改
+	const [oldpass, setoldpass] = useState("");//A1组进行修改
+	const [newpass, setnewpass] = useState("");//A1组进行修改
+	const onChange_password = (e) => {//A1组进行修改
+	  setValue_password(e.target.value);
+	};
+	const xiaohu = () => {
+		setIsModalVisible(6);
+	};
+	const handleCancel_xiaohu=()=>{
+		setIsModalVisible(false);
+	};
+	const handelok_changepass = () => {
+		request('/account_admin/fund_change_password', "POST", { 'Content-Type': 'application/json' },
+		  {
+			"trade_withdraw": value_password,
+			"fund_account_number": fund_account_number,
+			"old_password": oldpass,
+			"new_password": newpass
+		  }).then((response) => {
+			console.log(response);
+			if (response.code === '0') {
+			  alert("操作成功！");
+			}
+			else {
+			  alert(response.message);
+			}
+			setIsModalVisible(false);
+		  });
+	  }//A1组进行修改
+	  const [value_money_account_xiaohu, setValue_money_account_xiaohu] = useState(0);
+	  const onChange_money_account_xiaohu = (e) => {
+		console.log(e.target.value);
+		setValue_money_account_xiaohu(e.target.value);
+	  };//A1组进行修改
+	  const handleOk_xiaohu = () => {
+		
+		setIsModalVisible(false);
+	  };
 	const [own, setOwn] = useState([]) //持仓股票：信息
 	useEffect(() => { //查询股票持仓
 		request(
@@ -775,13 +815,50 @@ function TradePage() {
 						</div>
 						<div>
 							<>
-								<Modal title="修改密码" visible={isModalVisible === 3} onCancel={handleCancel} width={500} destroyOnClose={true} keyboard={true} okText={'确认'} cancelText={'取消'}>
-									<Input.Group compact>
-										<Input placeholder="请输入原密码" />
-										<br /><br />
-										<Input placeholder="请输入新密码" />
-									</Input.Group>
+								<Modal title="修改密码" visible={isModalVisible === 3} onCancel={handleCancel} width={500} destroyOnClose={true} keyboard={true} onOk={handelok_changepass}>
+								<Radio.Group onChange={onChange_password} >
+          <Radio value={0}>资金账户交易密码</Radio>
+          <Radio value={1}>资金账户登录密码</Radio>
+        </Radio.Group>
+        <br />
+        <br />
+        <Input placeholder="资金账户号码" prefix={<UserOutlined />} maxLength={18}
+          onChange={(event) => {
+            setfund_account_number(event.target.value);
+          }} />
+        <br />
+        <br />
+        <Input placeholder="旧密码" prefix={<KeyOutlined />} maxLength={6}
+          onChange={(event) => {
+            setoldpass(event.target.value);
+          }} />
+        <br />
+        <br />
+        <Input placeholder="新密码" prefix={<KeyOutlined />} maxLength={6}
+          onChange={(event) => {
+            setnewpass(event.target.value);
+          }} />
+        <br />
+        <br />
 								</Modal>
+								<Modal title="销户资金账户" width={500} visible={isModalVisible===6} onOk={handleOk_xiaohu} onCancel={handleCancel_xiaohu} destroyOnClose={true} keyboard={true} >
+        <Radio.Group onChange={onChange_money_account_xiaohu} >
+          <Radio value={0}>法人账户</Radio>
+          <Radio value={1}>个人账户</Radio>
+        </Radio.Group>
+        <Input placeholder="个人用户身份证号或法人注册登记号" prefix={<UserOutlined />} maxLength={18}
+          onChange={(event) => {
+            setid_num_legal_register_num(event.target.value);
+          }} />
+        <br />
+        <br />
+        <Input placeholder="证券账户号码" prefix={<UserOutlined />} maxLength={18}
+          onChange={(event) => {
+            setfund_account_number(event.target.value);
+          }} />
+        <br />
+        <br />
+      </Modal>
 							</>
 						</div>
 
@@ -789,8 +866,8 @@ function TradePage() {
 							<Drawer title="控制面板" placement="right" onClose={onClose} visible={visible} width={400}>
 								<div class="buttons">
 									<Button onClick={pwdChange}>修改密码</Button>
-									<Button>销户账户</Button>
-									<Button type="primary" danger onClick={() => {
+									<Button onClick={xiaohu}>销户账户</Button>
+									<Button  type="primary" danger onClick={() => {
 										window.location.href = "./";
 									}}>退出登录</Button>
 								</div>
