@@ -2,7 +2,7 @@ import React from 'react';
 import './MoneyPage.css'
 import Head from '../StockadminPage/Head.js';
 import request from "../../utils/request";
-import { Card, Col, Row, Modal, Input, Radio, DatePicker, Space } from 'antd';
+import { Card, Col, Row, Modal, Input, Radio, DatePicker, Space,Tabs } from 'antd';
 import ProTable from '@ant-design/pro-table';
 import { useState } from 'react';
 import { UserOutlined, PhoneOutlined, IdcardOutlined, HomeOutlined, KeyOutlined, MoneyCollectOutlined } from '@ant-design/icons';
@@ -18,7 +18,6 @@ for (let i = 0; i < 3; i += 1) {
     moneyname: moneyname[i],
     moneynumber: money[i],
     status: valueEnum[i],
-    memo: '正常账号',
   });
 }
 const columns = [
@@ -43,14 +42,8 @@ const columns = [
     title: '状态',
     width: 80,
     dataIndex: 'status',
-    initialValue: 'all',
   },
-  {
-    title: '备注',
-    dataIndex: 'memo',
-    ellipsis: true,
-    copyable: true,
-  },
+
   {
     title: '操作',
     width: 180,
@@ -72,7 +65,16 @@ function MoneyPage() {
   const [newpass, setnewpass] = useState("");
   const [id_num_legal_register_num, setid_num_legal_register_num] = useState("");
   const [isDetailsVisible1, setIsDetailsVisible1] = useState(false);
-
+  const { TabPane } = Tabs;
+  const [key,setkey]=useState(1);
+  const onChange_Tab = (key) => {
+    console.log(key);
+    setkey(key);
+  };
+  const [value_buban, setValue_buban] = useState(0);
+  const onChange_money_account_buban = (e) => {
+    setValue_buban(e.target.value);
+  };
   const showpage1 = () => {
     setIsDetailsVisible1(true);
   }
@@ -104,7 +106,7 @@ function MoneyPage() {
     setIsDetailsVisible2(true);
   }
   const handleOk2 = () => {
-    request('/account_admin/add_fund_account', "POST", { 'Content-Type': 'application/json' },
+    request('/account_admin/modify_money', "POST", { 'Content-Type': 'application/json' },
       {
         "add_withdraw": value_money,
         "fund_account_number": fund_account_number,
@@ -269,8 +271,7 @@ function MoneyPage() {
             }} rowKey="key" pagination={{
               showQuickJumper: true,
             }} search={{
-              optionRender: false,
-              collapsed: false,
+              labelWidth: 'auto',
             }} dateFormatter="string" headerTitle="资金账户详情" toolBarRender={() => [
 
             ]} />
@@ -311,7 +312,9 @@ function MoneyPage() {
                 </Col>
               </Row>
             </div>
-            <Modal title="开设资金账户" width={800} visible={isDetailsVisible1} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="开设/补办资金账户" width={800} visible={isDetailsVisible1} onOk={handleOk} onCancel={handleCancel}>
+            <Tabs defaultActiveKey="1" onChange={onChange_Tab}>
+          <TabPane tab="开设资金账户" key="1">
               <Radio.Group onChange={onChange_money_account} >
                 <Radio value={0}>法人账户</Radio>
                 <Radio value={1}>个人账户</Radio>
@@ -342,6 +345,28 @@ function MoneyPage() {
                 }} />
               <br />
               <br />
+              </TabPane>
+          <TabPane tab="补办证券账户" key="2">
+          <Radio.Group onChange={onChange_money_account_buban} >
+                <Radio value={0}>法人账户</Radio>
+                <Radio value={1}>个人账户</Radio>
+              </Radio.Group>
+              <br />
+              <br />
+              <Input placeholder="个人用户身份证号或法人注册登记号" prefix={<UserOutlined />} maxLength={18} />
+              <br />
+              <br />
+          <Input placeholder="资金账户号码" prefix={<UserOutlined />} maxLength={18}/>
+          <br />
+              <br />
+              <Input placeholder="资金账户交易密码" prefix={<KeyOutlined />} maxLength={18}/>
+              <br />
+              <br />
+              <Input placeholder="资金账户登录密码" prefix={<KeyOutlined />} maxLength={18}/>
+              <br />
+              <br />
+              </TabPane>
+        </Tabs>
             </Modal>
             <Modal title="添加/取出资金" width={800} visible={isDetailsVisible2} onOk={handleOk2} onCancel={handleCancel2}>
               <Radio.Group onChange={onChange_money} >
@@ -408,7 +433,7 @@ function MoneyPage() {
                 }} />
               <br />
               <br />
-              <Input placeholder="资金账户号码" prefix={<UserOutlined />} maxLength={18}
+              <Input placeholder="证券账户号码" prefix={<UserOutlined />} maxLength={18}
                 onChange={(event) => {
                   setfund_account_number(event.target.value);
                 }} />
@@ -426,7 +451,7 @@ function MoneyPage() {
                 }} />
               <br />
               <br />
-              <Input placeholder="资金账户号码" prefix={<UserOutlined />} maxLength={18}
+              <Input placeholder="证券账户号码" prefix={<UserOutlined />} maxLength={18}
                 onChange={(event) => {
                   setfund_account_number(event.target.value);
                 }} />
@@ -444,7 +469,7 @@ function MoneyPage() {
                 }} />
               <br />
               <br />
-              <Input placeholder="资金账户号码" prefix={<UserOutlined />} maxLength={18}
+              <Input placeholder="证券账户号码" prefix={<UserOutlined />} maxLength={18}
                 onChange={(event) => {
                   setfund_account_number(event.target.value);
                 }} />

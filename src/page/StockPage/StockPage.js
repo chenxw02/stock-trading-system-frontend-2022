@@ -12,7 +12,7 @@ const state = ['正常', '冻结', '正常'];
 const stockname = ['32434', '4344', '4324'];
 const id = ['31233', '21313', '54355'];
 const name = ['ddc', 'fdf', 'fde'];
-const shares = ['3332', '3213', '5436'];
+const address = ['3332', '3213', '5436'];
 const ifagency = ['yes', 'no', 'yes'];
 
 
@@ -25,7 +25,7 @@ for (let i = 0; i < 3; i += 1) {
     id: id[i],
     name: name[i],
     state: state[i],
-    shares: shares[i],
+    address: address[i],
     ifagency: ifagency[i],
   });
 }
@@ -53,8 +53,8 @@ const columns = [
     dataIndex: 'state',
   },
   {
-    title: '股票',
-    dataIndex: 'shares',
+    title: '用户住址',
+    dataIndex: 'address',
     ellipsis: true,
     copyable: true,
   },
@@ -265,8 +265,9 @@ function StockPage() {
   const handleOk4 = () => {
     request('/account_admin/securities_account_delete', "POST", { 'Content-Type': 'application/json' },
         {
-          "id_num/legal_register_num" : oldaccount,
-          "security_num" : oldpass
+          "label" : value_xiaohu,
+          "id_num/legal_register_num" : oldpass,
+          "security_num" : oldaccount
         }).then((response) => {
           console.log(response);
           if (response.code == '0') {
@@ -306,6 +307,10 @@ function StockPage() {
   const onChange_Tab_guashi = (e) => {
     setValue_tab(e.target.value);
   };
+  const [value_xiaohu, setValue_xiaohu] = useState(0);
+  const onChange_Tab_xiaohu = (e) => {
+    setValue_xiaohu(e.target.value);
+  };
   return (
 
     <div>
@@ -320,9 +325,8 @@ function StockPage() {
       }} rowKey="key" pagination={{
         showQuickJumper: true,
       }} search={{
-        optionRender: false,
-        collapsed: false,
-      }} dateFormatter="string" headerTitle="证券账户详情" toolBarRender={() => [
+        labelWidth: 'auto',
+    }} dateFormatter="string" headerTitle="证券账户详情" toolBarRender={() => [
 
       ]} />
       <div className="StockPage-site-card-wrapper">
@@ -532,13 +536,13 @@ function StockPage() {
             }}/>
             <br />
             <br />
-            <Input placeholder="新证券账户号码" prefix={<KeyOutlined />} maxLength={18} 
+            <Input placeholder="新证券账户号码" prefix={< UserOutlined/>} maxLength={18} 
             onChange={(event) => {
               setnewaccount(event.target.value);
             }}/>
             <br />
             <br />
-            <Input placeholder="新证券账户密码" prefix={<UserOutlined />} maxLength={6} 
+            <Input placeholder="新证券账户密码" prefix={<KeyOutlined />} maxLength={6} 
             onChange={(event) => {
               setnewpass(event.target.value);
             }}/>
@@ -546,6 +550,12 @@ function StockPage() {
         </Tabs>
       </Modal>
       <Modal title="销户证券账户" width={800} visible={isDetailsVisible4} onOk={handleOk4} onCancel={handleCancel4}>
+      <Radio.Group onChange={onChange_Tab_xiaohu} >
+              <Radio value={0}>法人账户</Radio>
+              <Radio value={1}>个人账户</Radio>
+            </Radio.Group>
+            <br/>
+            <br/>
         <Input placeholder="证券账户号码" prefix={<UserOutlined />} maxLength={18} 
         onChange={(event) => {
           setoldaccount(event.target.value);
