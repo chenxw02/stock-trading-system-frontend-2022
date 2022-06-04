@@ -287,6 +287,31 @@ function StockPage() {
       <ProTable columns={columns} request={(params) => {
         // 表单搜索项会从 params 传入，传递给后端接口。
         console.log(params);
+        request('/account_admin/get_securities_account_information_by_query', "POST", { 'Content-Type': 'application/json' },
+      {
+        "p_account_number": params["stockname"]?params["stockname"]:"",
+        "user_id_number": params["id"]?params["id"]:"",
+        "user_name": params["name"]?params["name"]:"",
+        "status": params["state"]?params["state"]:"",
+        "agent" : params["ifagency"]?params["ifagency"]:"",
+        "user_address" : params["address"]?params["address"]:""
+      }).then((response) => {
+        console.log(response);
+        datasoruce = []
+        for(var i=0; i<response.data.length; i++)
+        {
+          datasoruce.push(
+            {
+              "stockname" : response.data[i]["p_account_number"],
+              "id" : response.data[i]["user_id_number"],
+              "name" : response.data[i]["user_name"],
+              "state" : response.data[i]["status"],
+              "ifagency" : response.data[i]["agent"],
+              "address" : response.data[i]["user_address"],
+            }
+          )
+        }
+      });
         return Promise.resolve({
           data: datasoruce,
           success: true,
