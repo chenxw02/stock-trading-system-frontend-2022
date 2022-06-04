@@ -269,6 +269,22 @@ function MoneyPage() {
       <ProTable columns={columns} request={(params, sorter, filter) => {
         // 表单搜索项会从 params 传入，传递给后端接口。
         console.log(params, sorter, filter);
+        request('get_securities_account_information_by_query', "POST", { 'Content-Type': 'application/json' },
+      {
+        "securities_account_number": params["stockname"],
+        "fund_account_number": params["moneyname"],
+        "balance": params["moneynumber"],
+        "status": params["status"],
+      }).then((response) => {
+        console.log(response);
+        for(var i=0; i<response.data.length; i++)
+        {
+          datasoruce[i]["stockname"] = response.data[i]["securities_account_number"];
+          datasoruce[i]["moneyname"] = response.data[i]["fund_account_number"];
+          datasoruce[i]["moneynumber"] = response.data[i]["balance"];
+          datasoruce[i]["status"] = response.data[i]["account_status"];
+        }
+      });
         return Promise.resolve({
           data: datasoruce,
           success: true,
