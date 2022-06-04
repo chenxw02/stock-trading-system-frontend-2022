@@ -6,29 +6,7 @@ import ProTable from '@ant-design/pro-table';
 import { useState } from 'react';
 import { UserOutlined, PhoneOutlined, IdcardOutlined, HomeOutlined, KeyOutlined } from '@ant-design/icons';
 import request from "../../utils/request";
-
-const tableListDataSource = [];
-const state = ['正常', '冻结', '正常'];
-const stockname = ['32434', '4344', '4324'];
-const id = ['31233', '21313', '54355'];
-const name = ['ddc', 'fdf', 'fde'];
-const address = ['3332', '3213', '5436'];
-const ifagency = ['yes', 'no', 'yes'];
-
-
-
-
-for (let i = 0; i < 3; i += 1) {
-  tableListDataSource.push({
-    key: i,
-    stockname: stockname[i],
-    id: id[i],
-    name: name[i],
-    state: state[i],
-    address: address[i],
-    ifagency: ifagency[i],
-  });
-}
+let datasoruce=[];
 const columns = [
   {
     title: '证券账号',
@@ -61,15 +39,6 @@ const columns = [
   {
     title: '是否代办',
     dataIndex: 'ifagency',
-  },
-  {
-    title: '操作',
-    width: 180,
-    key: 'option',
-    valueType: 'option',
-    render: () => [
-      <a key="link">详情</a>,
-    ],
   },
 ];
 function StockPage() {
@@ -315,11 +284,11 @@ function StockPage() {
 
     <div>
       <Head keyValue="2" />
-      <ProTable columns={columns} request={(params, sorter, filter) => {
+      <ProTable columns={columns} request={(params) => {
         // 表单搜索项会从 params 传入，传递给后端接口。
-        console.log(params, sorter, filter);
+        console.log(params);
         return Promise.resolve({
-          data: tableListDataSource,
+          data: datasoruce,
           success: true,
         });
       }} rowKey="key" pagination={{

@@ -2,18 +2,12 @@ import React from 'react';
 import './MoneyPage.css'
 import Head from '../StockadminPage/Head.js';
 import request from "../../utils/request";
-import { Card, Col, Row, Modal, Input, Radio, DatePicker, Space, Tabs } from 'antd';
+import { Card, Col, Row, Modal, Input, Radio, Tabs,Select } from 'antd';
 import ProTable from '@ant-design/pro-table';
 import { useState } from 'react';
-import { UserOutlined, PhoneOutlined, IdcardOutlined, HomeOutlined, KeyOutlined, MoneyCollectOutlined } from '@ant-design/icons';
-const datasoruce = [
-  {
-    stockname: '32435',
-    moneyname: '435445',
-    moneynumber: '4324',
-    status: '冻结'
-  }
-]
+import { UserOutlined, KeyOutlined, MoneyCollectOutlined } from '@ant-design/icons';
+let datasoruce = [];
+const { Option } = Select;
 const columns = [
   {
     title: '证券账号',
@@ -263,26 +257,36 @@ function MoneyPage() {
     console.log(e.target.value);
     setValue_money_account_xiaohu(e.target.value);
   };
+  const [value_query,setvalue_query]=useState("");
+  const onChange_query = (value) => {
+    setvalue_query(value);
+  };
   return (
     <div>
       <Head keyValue="3" />
-      <ProTable columns={columns} request={(params, sorter, filter) => {
+      <ProTable columns={columns} request={(params) => {
         // 表单搜索项会从 params 传入，传递给后端接口。
-        console.log(params, sorter, filter);
-        request('get_securities_account_information_by_query', "POST", { 'Content-Type': 'application/json' },
+        console.log("");
+        request('/account_admin/get_fund_account_information_by_query', "POST", { 'Content-Type': 'application/json' },
       {
-        "securities_account_number": params["stockname"],
-        "fund_account_number": params["moneyname"],
-        "balance": params["moneynumber"],
-        "status": params["status"],
+        "securities_account_number": params["stockname"]?params["stockname"]:"",
+        "fund_account_number": params["moneyname"]?params["moneyname"]:"",
+        "balance": params["moneynumber"]?params["moneynumber"]:"",
+        "status": params["status"]?params["status"]:"",
+        "label" : value_query
       }).then((response) => {
         console.log(response);
+        datasoruce = []
         for(var i=0; i<response.data.length; i++)
         {
-          datasoruce[i]["stockname"] = response.data[i]["securities_account_number"];
-          datasoruce[i]["moneyname"] = response.data[i]["fund_account_number"];
-          datasoruce[i]["moneynumber"] = response.data[i]["balance"];
-          datasoruce[i]["status"] = response.data[i]["account_status"];
+          datasoruce.push(
+            {
+              "stockname" : response.data[i]["securities_account_number"],
+              "moneyname" : response.data[i]["fund_account_number"],
+              "moneynumber" : response.data[i]["balance"],
+              "status" : response.data[i]["account_status"]
+            }
+          )
         }
       });
         return Promise.resolve({
@@ -293,10 +297,13 @@ function MoneyPage() {
         showQuickJumper: true,
       }} search={{
         labelWidth: 'auto',
-      }} dateFormatter="string" headerTitle="资金账户详情" toolBarRender={() => [
-
+      }} toolBarRender={() => [
+        <Select defaultValue="0" style={{ width: 120 }} onChange={onChange_query}>
+        <Option value="0">法人证券账户</Option>
+        <Option value="1">个人证券账户</Option>
+        </Select>
       ]} />
-      <div className="MoneyPage-site-card-wrapper">
+      <div >
         <Row gutter={16}>
           <Col span={8}>
             <Card title="开设/补办资金账户" bordered={true} hoverable={true} extra={<a onClick={showpage1}>More</a>}>

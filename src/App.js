@@ -8,7 +8,7 @@ import TradePage from './page/TradePage/TradePage';
 import LoginPage from './page/LoginPage/LoginPage';
 import MoneyPage from './page/MoneyPage/MoneyPage';
 import TradeCenter from './page/TradePage/TradeCenter';
-import TestPage from './page/TradePage/TestPage';
+
 
 function App() {
   return (
@@ -27,7 +27,6 @@ function App() {
           <Route path='/highqueryresult' element={<HighQueryResult />} />
       <Route path='/money' element={<MoneyPage />} />
       <Route path='/tradecenter' element={<TradeCenter />} />
-      <Route path='/test' element={<TestPage />} />
     </Routes>
   );
 }
