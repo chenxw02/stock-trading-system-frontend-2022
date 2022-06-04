@@ -79,7 +79,9 @@ function MoneyPage() {
     setIsDetailsVisible1(true);
   }
   const handleOk = () => {
-    request('/account_admin/add_fund_account', "POST", { 'Content-Type': 'application/json' },
+    if(key == 1)
+    {
+      request('/account_admin/add_fund_account', "POST", { 'Content-Type': 'application/json' },
       {
         "label": value_money_account,
         "securities_account_number": securities_account_number,
@@ -95,6 +97,25 @@ function MoneyPage() {
           alert(response.message);
         }
       })
+    }
+    else{
+      request('/account_admin/add_fund_account', "POST", { 'Content-Type': 'application/json' },
+      {
+        "label": value_money_account,
+        "id_num/legal_register_num": securities_account_number,
+        "account_number": fund_account_number,
+        "trade_password": trade_password,
+        "login_password": login_password
+      }).then((response) => {
+        console.log(response);
+        if (response.code == '0') {
+          alert("补办成功！");
+        }
+        else {
+          alert(response.message);
+        }
+      })
+    }
     setIsDetailsVisible1(false);
   };
 
@@ -346,23 +367,35 @@ function MoneyPage() {
               <br />
               <br />
               </TabPane>
-          <TabPane tab="补办证券账户" key="2">
+          <TabPane tab="补办资金账户" key="2">
           <Radio.Group onChange={onChange_money_account_buban} >
                 <Radio value={0}>法人账户</Radio>
                 <Radio value={1}>个人账户</Radio>
               </Radio.Group>
               <br />
               <br />
-              <Input placeholder="个人用户身份证号或法人注册登记号" prefix={<UserOutlined />} maxLength={18} />
+              <Input placeholder="个人用户身份证号或法人注册登记号" prefix={<UserOutlined />} maxLength={18}
+              onChange={(event) => {
+                setsecurities_account_number(event.target.value);
+              }} />
               <br />
               <br />
-          <Input placeholder="资金账户号码" prefix={<UserOutlined />} maxLength={18}/>
+          <Input placeholder="资金账户号码" prefix={<UserOutlined />} maxLength={18}
+              onChange={(event) => {
+                setfund_account_number(event.target.value);
+              }}/>
           <br />
               <br />
-              <Input placeholder="资金账户交易密码" prefix={<KeyOutlined />} maxLength={18}/>
+              <Input placeholder="资金账户交易密码" prefix={<KeyOutlined />} maxLength={18}
+              onChange={(event) => {
+                settrade_password(event.target.value);
+              }}/>
               <br />
               <br />
-              <Input placeholder="资金账户登录密码" prefix={<KeyOutlined />} maxLength={18}/>
+              <Input placeholder="资金账户登录密码" prefix={<KeyOutlined />} maxLength={18}
+              onChange={(event) => {
+                setlogin_password(event.target.value);
+              }} />
               <br />
               <br />
               </TabPane>
