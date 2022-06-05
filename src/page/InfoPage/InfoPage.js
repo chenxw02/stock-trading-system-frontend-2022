@@ -1,7 +1,7 @@
 //待处理问题：普通查询延迟、K线图绘制延迟
 //正式发布时删除测试用输出
 
-import { InfoHead} from './InfoHead.js';
+import { InfoHead } from './InfoHead.js';
 import { Input, Button, Menu, Row, Col, Table, Space } from 'antd';
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -28,6 +28,9 @@ function handletime(time) {
         return "";
     var res;
     var test = time.toString();
+    while (test.length < 6) {
+        test = "0" + test;
+    }
     res = test[0] + test[1] + ": " + test[2] + test[3] + ": " + test[4] + test[5];
     return res;
 }
@@ -111,7 +114,6 @@ function QueryTable() {
                     expandedRowRender: (record) => (
                         <p style={{ margin: 0, }}>{record.description}</p>
                     ),
-                    rowExpandable: (record) => record.description !== '',
                 }}
             />
         </div>
@@ -176,7 +178,7 @@ function InfoPage() {
                                 }
                             })
                     }
-                    
+
                 }}
             > 登录</Button>
 
@@ -297,9 +299,14 @@ function QueryResult() {
                                             if (response.code == '0') {
                                                 var descrip = '';
                                                 var n = 0;
-                                                for (let i = 0; i <= response.data.length; i++) {
-                                                    descrip = "交易日期:" + handledate(response.data[i].transaction_date) + " 交易时间:" + handletime(response.data[i].transaction_time) + " 交易数量:"
-                                                        + response.data[i].transaction_number + " 交易单价:" + response.data[i].transaction_price + " 交易总额:" + response.data[i].transaction_amount;
+                                                for (let i = 0; i <= response.data.length; i++) {                                                       
+                                                    if (response.data[i].buy_sell_flag != "") {
+                                                        descrip = "交易类型:" + response.data[i].buy_sell_flag + " 交易日期:" + handledate(response.data[i].transaction_date) + " 交易时间:" + handletime(response.data[i].transaction_time) + " 交易数量:"
+                                                            + response.data[i].transaction_number + " 交易单价:" + response.data[i].transaction_price + " 交易总额:" + response.data[i].transaction_amount;
+                                                    }
+                                                    else {
+                                                        descrip = "";
+                                                    }
                                                     data.push({
                                                         key: i,
                                                         stockname: response.data[i].stock_name,
@@ -311,7 +318,7 @@ function QueryResult() {
                                                     })
                                                     while (response.data[i + 1].stock_id == response.data[i].stock_id) {
                                                         i++;
-                                                        descrip += '\n' + "交易日期:" + handledate(response.data[i].transaction_date) + " 交易时间:" + handletime(response.data[i].transaction_time) + " 交易数量:"
+                                                        descrip += '\n'+"交易类型:" + response.data[i].buy_sell_flag + " 交易日期:" + handledate(response.data[i].transaction_date) + " 交易时间:" + handletime(response.data[i].transaction_time) + " 交易数量:"
                                                             + response.data[i].transaction_number + " 交易单价:" + response.data[i].transaction_price + " 交易总额:" + response.data[i].transaction_amount;
                                                         if (i == response.data.length - 1) {
                                                             break;
@@ -327,13 +334,13 @@ function QueryResult() {
                                             }
                                         })
                                     navigate('/queryresult', { state: { ID: ID, Authority: Authority, Stock: Stock } });
-                                }                              
+                                }
                             }}
                         >查询</Button>
                     </Col>
-                    <Col push={1}>                        
+                    <Col push={1}>
                         {/*传递到新查询页面,测试用*/}
-                        <h1>{location.state.Stock}</h1>
+                        {/*<h1>{location.state.Stock}</h1>*/}
                     </Col>
                     {/*股票信息组件*/}
                     <Col push={3}>
@@ -390,7 +397,7 @@ function Register() {
                         alert("两次输入密码不同！")
                     } else if (Password.length > 20) {
                         alert("密码不能超过20位！")
-                    } else if (Password.length == 0){
+                    } else if (Password.length == 0) {
                         alert("密码不能为空")
                     } else if (/.*[\u4e00-\u9fa5]+.*$/.test(Password)) {
                         alert("密码含有中文！")
@@ -528,7 +535,7 @@ function Change() {
                                     alert(response.message);
                                 }
                             })
-                    }                  
+                    }
                 }}
             > 确认</Button>
         </div>
@@ -623,7 +630,7 @@ function HighQueryResult() {
     else if (ktype == 2) {
         return (
             <div>
-                <InfoHead ID={ID}/>
+                <InfoHead ID={ID} />
                 <Kline2></Kline2>
                 <Col push={11}>
                     <Button type="primary" size="large"
@@ -648,7 +655,7 @@ function HighQueryResult() {
     else if (ktype == 3) {
         return (
             <div>
-                <InfoHead ID={ID}/>
+                <InfoHead ID={ID} />
                 <Kline3></Kline3>
                 <Col push={11}>
                     <Button type="primary" size="large"
@@ -697,7 +704,7 @@ function Kline3() {
 
 class Kkline1 extends React.Component {
     componentDidMount() {
-    {
+        {
             var chartDom = document.getElementById('main1');
             var myChart = echarts.init(chartDom);
             var option;
@@ -780,104 +787,104 @@ class Kkline1 extends React.Component {
 
 
 class Kkline2 extends React.Component {
-    componentDidMount() {      
-            var chartDom = document.getElementById('main2');
-            var myChart = echarts.init(chartDom);
-            var option;
-            var date = [];
-            var ifo = [];
-            var i;
-            var j = 49;
-            var temparr = [];
-            var temparr1 = [];
-            var tempdate = [];
-            var tempifo = [];
-            for (i = orgifo.length - 1; j >= 0 && i > 7; j--) {
-                var z;
-                var max, min, open, close;
-                max = -1;
-                min = 99999;
-                for (z = -7; z <= 0; z++) {
-                    temparr1 = orgifo[i + z];
-                    if (max < temparr1[1]) {
-                        max = temparr1[1];
-                    }
-                    if (min > temparr1[2]) {
-                        min = temparr1[2];
-                    }
+    componentDidMount() {
+        var chartDom = document.getElementById('main2');
+        var myChart = echarts.init(chartDom);
+        var option;
+        var date = [];
+        var ifo = [];
+        var i;
+        var j = 49;
+        var temparr = [];
+        var temparr1 = [];
+        var tempdate = [];
+        var tempifo = [];
+        for (i = orgifo.length - 1; j >= 0 && i > 7; j--) {
+            var z;
+            var max, min, open, close;
+            max = -1;
+            min = 99999;
+            for (z = -7; z <= 0; z++) {
+                temparr1 = orgifo[i + z];
+                if (max < temparr1[1]) {
+                    max = temparr1[1];
                 }
-                temparr1 = orgifo[i];
-                close = temparr1[4];
-                temparr1 = orgifo[i - 7];
-                open = temparr1[3];
-                temparr = [];
-                temparr.push(max);
-                temparr.push(min);
-                temparr.push(open);
-                temparr.push(close);
-                tempifo.push(temparr);
-                temparr1 = orgifo[i];
-                tempdate.push(temparr1[0]);
-                i = i - 7;
+                if (min > temparr1[2]) {
+                    min = temparr1[2];
+                }
             }
-            //reverse
-            for (i = tempdate.length - 1; i >= 0; i--) {
-                ifo.push(tempifo[i]);
-                date.push(tempdate[i]);
-            }
-
-
-            option = {
-                tooltip: {
-                    trigger: "axis",
-                    axisPointer: {
-                        type: "cross"
-                    }
-                },
-                legend: {
-                    data: "周K" //need to
-                },
-                grid: {
-                    left: "10%",
-                    right: "10%",
-                    bottom: "15%"
-                },
-                xAxis: {
-                    type: "category",
-                    data: date,
-                    scale: true,
-                },
-                yAxis: {
-                    scale: true,
-
-                },
-                dataZoom: [{
-                    type: "inside",
-                    start: 50,
-                    end: 100
-                }, {
-                    show: true,
-                    type: "slider",
-                    top: "90%",
-                    start: 50,
-                    end: 100
-                }],
-                series: [{
-                    name: "周K",
-                    type: "candlestick",
-                    data: ifo,
-                    colorBy: "series",
-                    legendHoverLink: true,
-                    layout: "horizontal",
-                    barWidth: "69%",
-                    itemStyle: {
-                        opacity: 1
-                    }
-                }]
-            }
-            myChart.setOption(option);
+            temparr1 = orgifo[i];
+            close = temparr1[4];
+            temparr1 = orgifo[i - 7];
+            open = temparr1[3];
+            temparr = [];
+            temparr.push(max);
+            temparr.push(min);
+            temparr.push(open);
+            temparr.push(close);
+            tempifo.push(temparr);
+            temparr1 = orgifo[i];
+            tempdate.push(temparr1[0]);
+            i = i - 7;
         }
-   
+        //reverse
+        for (i = tempdate.length - 1; i >= 0; i--) {
+            ifo.push(tempifo[i]);
+            date.push(tempdate[i]);
+        }
+
+
+        option = {
+            tooltip: {
+                trigger: "axis",
+                axisPointer: {
+                    type: "cross"
+                }
+            },
+            legend: {
+                data: "周K" //need to
+            },
+            grid: {
+                left: "10%",
+                right: "10%",
+                bottom: "15%"
+            },
+            xAxis: {
+                type: "category",
+                data: date,
+                scale: true,
+            },
+            yAxis: {
+                scale: true,
+
+            },
+            dataZoom: [{
+                type: "inside",
+                start: 50,
+                end: 100
+            }, {
+                show: true,
+                type: "slider",
+                top: "90%",
+                start: 50,
+                end: 100
+            }],
+            series: [{
+                name: "周K",
+                type: "candlestick",
+                data: ifo,
+                colorBy: "series",
+                legendHoverLink: true,
+                layout: "horizontal",
+                barWidth: "69%",
+                itemStyle: {
+                    opacity: 1
+                }
+            }]
+        }
+        myChart.setOption(option);
+    }
+
     render() {
         return (
             <div id="main2" style={{ width: "1600px", height: "800px", margin: "auto" }}></div>
@@ -888,7 +895,7 @@ class Kkline2 extends React.Component {
 
 class Kkline3 extends React.Component {
     componentDidMount() {
-    {
+        {
             var Stock_id = Id_;
             var chartDom = document.getElementById('main3');
             var myChart = echarts.init(chartDom);
