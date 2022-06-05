@@ -10,30 +10,6 @@ function callback(key) {
 
 function MoneyPage() {
     const[mydata,setdata]=useState();
-    const[data1,setdata1]=useState();
-
-    useEffect(() => { //查询审批
-      request(
-          '/account_admin/show_deal',
-          "GET",
-          {'Content-Type': 'application/json',
-			'Authorization': localStorage.getItem("token")}
-        ).then((response) => {
-          console.log(response);
-           setdata1([]);
-          for(var i=0; i<response.data.length; i++){
-           var temp = { //一条记录
-              "id_1": response.data[i]["deal_id"],
-              "stock": response.data[i]["securities_account_number"],
-              "id": response.data[i]["person_id"],
-              "tags": response.data[i]["status"]
-            };
-            data1.push(temp);
-          }
-          console.log("this",data1);         
-        }
-        )
-      }, );
     const [ifapproval,setapproval]=useState("1");
     const shenpi1=(e,r)=>
      {
@@ -151,8 +127,8 @@ function MoneyPage() {
     <TabPane tab="审批" key="1">
     </TabPane>
     </Tabs>
-    <Button>查询</Button>
-    <Table columns={columns} dataSource={data1} />
+    <Button onclick={select_click}>查询</Button>
+    <Table columns={columns} dataSource={mydata} />
     </Content>
        </div>
     <Footer style={{ textAlign: 'center' }}>管理员界面</Footer>
@@ -165,5 +141,28 @@ function MoneyPage() {
     
 }
 
+const select_click=()=>{
+  request(
+    '/account_admin/show_deal',
+    "GET",
+    {'Content-Type': 'application/json',
+'Authorization': localStorage.getItem("token")}
+  ).then((response) => {
+    console.log(response);
+    var data1 = [];
+    for(var i=0; i<response.data.length; i++){
+     var temp = { //一条记录
+        "id_1": response.data[i]["deal_id"],
+        "stock": response.data[i]["securities_account_number"],
+        "id": response.data[i]["person_id"],
+        "tags": response.data[i]["status"]
+      };
+      data1.push(temp);
+    }
+    setdata(data1);
+    console.log("this",data1);         
+  }
+  );
+}
 
 export default MoneyPage;
