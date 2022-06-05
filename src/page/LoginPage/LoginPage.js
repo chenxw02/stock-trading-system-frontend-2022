@@ -1,31 +1,26 @@
-import "./LoginPage.css"
-import { Input, Button, Radio, Divider, Row, Col, Carousel } from 'antd';
-import {
-    UserOutlined,
-    LockOutlined
-} from "@ant-design/icons";
+import "./LoginPage.css";
+import { Input, Button, Radio, Divider, Row, Col, Carousel } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import request from "../../utils/request";
 
 const options = [
-    { label: '普通用户', value: '普通用户' },
-    { label: '账户管理员', value: '账户管理员' },
-    { label: '股票管理员', value: '股票管理员' },
+    { label: "普通用户", value: "普通用户" },
+    { label: "账户管理员", value: "账户管理员" },
+    { label: "股票管理员", value: "股票管理员" },
 ];
-
 
 function LoginPage() {
     const [identity, setIdentity] = useState("普通用户");
     const [aid, setAid] = useState("");
     const [password, setPassword] = useState("");
 
-
     const contentStyle = {
-        height: '400px',
-        color: '#fff',
-        lineHeight: '360px',
-        textAlign: 'center',
-        background: '#364d79',
+        height: "400px",
+        color: "#fff",
+        lineHeight: "360px",
+        textAlign: "center",
+        background: "#364d79",
     };
 
     return (
@@ -78,64 +73,101 @@ function LoginPage() {
                             buttonStyle="solid"
                             size="large"
                             options={options}
-                            onChange={(event) => { setIdentity(event.target.value) }}
+                            onChange={(event) => {
+                                setIdentity(event.target.value);
+                            }}
                             value={identity}
                             optionType="button"
                             className="login_group"
                         />
-                        <div />
-                        <Button type="primary" className="login_button"
+                        <br />
+                        <Button
+                            type="primary"
+                            className="login_button"
                             onClick={() => {
                                 switch (identity) {
                                     case "普通用户":
-                                        window.location.href = "./trade";
+                                        request(
+                                            '/trade/login',
+                                            "POST",
+                                            { 'Content-Type': 'application/json' },
+                                            {
+                                                "user_id": aid,
+                                                "password": password
+                                            }
+                                        ).then((response) => {
+                                            console.log(response);
+                                            if (response.code == '0') {
+                                                localStorage.setItem("token", response.data);
+                                                window.location.href = "./trade";
+                                            }
+                                            else {
+                                                alert(response.message);
+                                            }
+                                        });
                                         break;
                                     case "账户管理员":
-                                        request('/account_admin/login', "POST", { 'Content-Type': 'application/json' },
+                                        request(
+                                            "/account_admin/login",
+                                            "POST",
+                                            { "Content-Type": "application/json" },
                                             {
-                                                "administrator_id": aid,
-                                                "administrator_password": password
-                                            }).then((response) => {
-                                                console.log(response);
-                                                if (response.code == '0') {
-                                                    window.location.href = "./stockadmin";
-                                                }
-                                                else {
-                                                    alert(response.message);
-                                                }
-                                            })
+                                                administrator_id: aid,
+                                                administrator_password: password,
+                                            }
+                                        ).then((response) => {
+                                            console.log(response);
+                                            if (response.code == "0") {
+                                                window.location.href = "./stockadmin";
+                                            } else {
+                                                alert(response.message);
+                                            }
+                                        });
                                         break;
                                     // window.location.href="./stockadmin";
                                     // break;
                                     case "股票管理员":
-                                        request('/admin/login', "POST", { 'Content-Type': 'application/json' },
+                                        request(
+                                            "/admin/login",
+                                            "POST",
+                                            { "Content-Type": "application/json" },
                                             {
-                                                "admin_id": aid,
-                                                "password": password
-                                            }).then((response) => {
-                                                console.log(response);
-                                                if (response.code == '0') {
-                                                    localStorage.setItem("token", response.data);
-                                                    localStorage.setItem("admin_name", aid);
-                                                    window.location.href = "./admin";
-                                                }
-                                                else {
-                                                    alert(response.message);
-                                                }
-                                            })
+                                                admin_id: aid,
+                                                password: password,
+                                            }
+                                        ).then((response) => {
+                                            console.log(response);
+                                            if (response.code == "0") {
+                                                localStorage.setItem("token", response.data);
+                                                localStorage.setItem("admin_name", aid);
+                                                window.location.href = "./admin";
+                                            } else {
+                                                alert(response.message);
+                                            }
+                                        });
                                         break;
                                 }
                             }}
-                        > 登录</Button>
-                        <Button type="primary" className="login_button"
-                            onClick={() => { window.location.href = "./info"; }}
-                        > 游客访问</Button>
+                        >
+                            {" "}
+                            登录
+                        </Button>
+                        <br />
+                        <Button
+                            type="primary"
+                            className="login_button"
+                            onClick={() => {
+                                window.location.href = "./info";
+                            }}
+                        >
+                            {" "}
+                            游客访问
+                        </Button>
                     </div>
                 </Col>
             </Row>
         </div>
-
-    )
+    );
 }
 
 export default LoginPage;
