@@ -156,7 +156,7 @@ async function totalPrice() {
     var amount = state.amount;
     var res = price * amount;
     console.log(amount);
-    document.getElementById("totalnumber").innerHTML = res;
+    document.getElementById("totalnumber").innerHTML = res.toFixed(2);
 
 }
 
@@ -206,12 +206,12 @@ function showStockInfo() {
                     var Dlow = response.data.Dlow;
                     var Dhigh = response.data.Dhigh;
 
-                    document.getElementById("Dlow").innerHTML = response.data.Dlow;
-                    document.getElementById("Dhigh").innerHTML = response.data.Dhigh;
-                    document.getElementById("Wlow").innerHTML = response.data.Wlow;
-                    document.getElementById("Whigh").innerHTML = response.data.Whigh;
-                    document.getElementById("Mlow").innerHTML = response.data.Mlow;
-                    document.getElementById("Mhigh").innerHTML = response.data.Mhigh;
+                    document.getElementById("Dlow").innerHTML = response.data.Dlow.toFixed(2);
+                    document.getElementById("Dhigh").innerHTML = response.data.Dhigh.toFixed(2);
+                    document.getElementById("Wlow").innerHTML = response.data.Wlow.toFixed(2);
+                    document.getElementById("Whigh").innerHTML = response.data.Whigh.toFixed(2);
+                    document.getElementById("Mlow").innerHTML = response.data.Mlow.toFixed(2);
+                    document.getElementById("Mhigh").innerHTML = response.data.Mhigh.toFixed(2);
                     document.getElementById("name").innerHTML = name;
 
                     if (float < 0) {
@@ -341,12 +341,12 @@ function TradePage() {
                         key: response.data[i].stock_id,
                         name: response.data[i].stock_name,
                         cost: c.toFixed(2),
-                        price: response.data[i].price,
+                        price: response.data[i].price.toFixed(2),
                         num: response.data[i].own_number,
                         ava: response.data[i].own_number - response.data[i].frozen,
                         gnl: g.toFixed(2),
                         gnlratio: gr.toFixed(2),
-                        amount: response.data[i].own_number * response.data[i].price,
+                        amount: (response.data[i].own_number * response.data[i].price).toFixed(2),
                     };
                     list.push(temp);
                 }
