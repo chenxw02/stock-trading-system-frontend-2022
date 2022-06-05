@@ -510,7 +510,20 @@ function TradePage() {
 		setValue_money_account_xiaohu(e.target.value);
 	  };//A1组进行修改
 	  const handleOk_xiaohu = () => {
-		
+		request('/account_admin/add_new_deal', "POST", { 'Content-Type': 'application/json' },
+      {
+        "id_num/legal_register_num": id_num_legal_register_num,
+        "security_num": fund_account_number,
+        "label": value_money_account_xiaohu
+      }).then((response) => {
+        console.log(response);
+        if (response.code === '0') {
+          alert("已发送申请！");
+        }
+        else {
+          alert(response.message);
+        }
+      });
 		setIsModalVisible(false);
 	  };
 	const [own, setOwn] = useState([]) //持仓股票：信息
