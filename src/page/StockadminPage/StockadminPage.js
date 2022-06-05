@@ -53,7 +53,7 @@ function MoneyPage() {
               request('/account_admin/handle_deal', "POST", { 'Content-Type': 'application/json' },
               {
                 "deal_id": record["id_1"],
-                "ifapproval": ifapproval
+                "ifapproval": 1
               }).then((response) => {
                 console.log(response);
                 if (response.code === '0') {
@@ -68,7 +68,7 @@ function MoneyPage() {
               request('/account_admin/handle_deal', "POST", { 'Content-Type': 'application/json' },
               {
                 "deal_id": record["id_1"],
-                "ifapproval": ifapproval
+                "ifapproval": 0
               }).then((response) => {
                 console.log(response);
                 if (response.code === '0') {
