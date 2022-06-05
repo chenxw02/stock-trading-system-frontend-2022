@@ -16,15 +16,19 @@ import * as echarts from "echarts";
 
 /*处理交易时间*/
 function handledate(time) {
+    if (time == "")
+        return "";
     var res;
     var test = time.toString();
-    res = test[0] + test[1] + test[2] + test[3]+ "/" + test[4] + test[5] + "/" + test[6] + test[7];
+    res = test[0] + test[1] + test[2] + test[3] + "/" + test[4] + test[5] + "/" + test[6] + test[7];
     return res;
 }
 function handletime(time) {
+    if (time == "")
+        return "";
     var res;
     var test = time.toString();
-    res = test[0] + test[1] + ": " + test[2]+test[3] + ": " + test[4]+test[5];
+    res = test[0] + test[1] + ": " + test[2] + test[3] + ": " + test[4] + test[5];
     return res;
 }
 
