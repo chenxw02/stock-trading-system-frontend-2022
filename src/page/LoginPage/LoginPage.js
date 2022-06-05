@@ -116,6 +116,7 @@ function LoginPage() {
                                                 console.log(response);
                                                 if (response.code == '0') {
                                                     localStorage.setItem("token", response.data);
+                                                    localStorage.setItem("admin_name", aid);
                                                     window.location.href = "./admin";
                                                 }
                                                 else {

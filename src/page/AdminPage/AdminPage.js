@@ -102,13 +102,13 @@ function AdminPage() {
     const showDetails = (id, name) => {
         setDescStockId(id);
         setDescStockName(name);
-        request('/admin/latest_transaction', "GET",
+        request('/admin/latest_transaction', "POST",
             {
                 'Content-Type': 'application/json',
                 'Authorization': localStorage.getItem('token')
             },
             {
-                "stock_id": descStockId,
+                "stock_id": id,
             }).then((response) => {
                 if (response.code == '0') {
                     setStockNewPrice(response.data.latest_amount);
@@ -118,7 +118,7 @@ function AdminPage() {
                     alert(response.message);
                 }
             });
-        request('/admin/instruction', "GET",
+        request('/admin/instruction', "POST",
             {
 
                 'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ function AdminPage() {
             },
             {
                 "buy_or_sell": "B",
-                "stock_id": descStockId,
+                "stock_id": id,
             }).then((response) => {
                 if (response.code == '0') {
                     setStockDataBuy(response.data);
@@ -135,7 +135,7 @@ function AdminPage() {
                     alert(response.message);
                 }
             });
-        request('/admin/instruction', "GET",
+        request('/admin/instruction', "POST",
             {
 
                 'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ function AdminPage() {
             },
             {
                 "buy_or_sell": "S",
-                "stock_id": descStockId,
+                "stock_id": id,
             }).then((response) => {
                 if (response.code == '0') {
                     setStockDataSell(response.data);
@@ -205,13 +205,13 @@ function AdminPage() {
                                 },
                                 {
                                     "stock_id": stock_id,
-                                    "stock_status": checked
+                                    "stock_status": (checked ? "T" : "F")
                                 }).then((response) => {
                                     if (response.code == '102') {
                                         window.location.href = "./";
                                     }
                                     else if (response.code != '0') {
-                                        alert(response.message);
+                                        alert(response.message + " 请刷新页面！");
                                     }
                                 })
                         }} />
@@ -223,8 +223,8 @@ function AdminPage() {
     const detailColumns = [
         {
             title: '股票价格',
-            key: 'price',
-            dataIndex: 'price',
+            key: 'target_price',
+            dataIndex: 'target_price',
             sorter: (a, b) => a.price - b.price,
             defaultSortOrder: { stockSortOrder },
         },
@@ -235,8 +235,8 @@ function AdminPage() {
         },
         {
             title: "股数",
-            key: "number",
-            dataIndex: "number"
+            key: "target_number",
+            dataIndex: "target_number"
         },
     ];
     useEffect(() => {
@@ -247,8 +247,9 @@ function AdminPage() {
                 'Authorization': localStorage.getItem('token')
             }
         ).then((response) => {
-            console.log(response);
             //虽然下面这个If分支毫无意义，但是为了展现代码结构，我还是保留着了
+            console.log(localStorage.getItem('token'));
+            console.log(response.code);
             if (response.code == '0') {
                 setStocks(response.data);
             }
@@ -260,12 +261,12 @@ function AdminPage() {
             }
         })
 
-    });
+    }, stocks);
     return (
         <div className='admin_background'>
 
             <div className='admin_header'>
-                <div className='admin_welcome'>Hi,Admin</div>
+                <div className='admin_welcome'>Dear {localStorage.getItem('admin_name')}</div>
 
                 <div id="datetime" className="admin_datetime">
                     {setInterval("document.getElementById('datetime').innerHTML=new Date();", 1000)}
@@ -289,7 +290,7 @@ function AdminPage() {
             </Menu>
 
             <div className='admin_table_back'>
-                <Table dataSource={data}
+                <Table dataSource={stocks}
                     //等等data可以改成stocks
                     columns={columns} className="admin_table" bordered="true" />;
 
@@ -331,13 +332,15 @@ function AdminPage() {
                         defaultValue={0}
                         min={0} max={100} step="0.01"
                         formatter={value => `${Number(value).toFixed(2)}%`}
-                        parser={value => value.replace('%', '')} />
+                        parser={value => value.replace('%', '')}
+                        onChange={(value) => { setRiseThreshold(value) }} />
                     <InputNumber addonBefore="最大跌幅"
                         style={{ width: '30%', marginTop: "1.5%", marginLeft: "5%" }}
                         defaultValue={0}
                         min={0} max={100} step="0.01"
                         formatter={value => `${Number(value).toFixed(2)}%`}
-                        parser={value => value.replace('%', '')} />
+                        parser={value => value.replace('%', '')}
+                        onChange={(value) => { setFallThreshold(value); }} />
                     <Button type="primary" style={{ width: '10%', marginTop: "1.5%", marginLeft: "10%" }}
                         onClick={() => {
                             request('/admin/stock_threshold', "PUT",
@@ -351,11 +354,13 @@ function AdminPage() {
                                     "fall_threshold": fallThreshold
                                 }).then((response) => {
 
-                                    //虽然下面这个If分支毫无意义，但是为了展现代码结构，我还是保留着了
                                     if (response.code == '102') {
                                         window.location.href = "./";
                                     }
-                                    else if (response.code != '0') {
+                                    else if (response.code == '0') {
+                                        alert("涨跌幅更新成功");
+                                    }
+                                    else {
                                         alert(response.message);
                                     }
                                 })
