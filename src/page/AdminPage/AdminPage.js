@@ -7,76 +7,11 @@ import request from "../../utils/request";
 const { Column, ColumnGroup } = Table;
 
 
-const data = [
-    {
-        "status": "T",
-        "stock_id": "a111",
-        "stock_name": "test1"
-    },
-    {
-        "status": "T",
-        "stock_id": "a112",
-        "stock_name": "test2"
-    },
-    {
-        "status": "F",
-        "stock_id": "a113",
-        "stock_name": "test3"
-    },
-]
+const data = [];
 
-const
+const StockDataBuy = [];
 
-    StockDataBuy = [
-        {
-            price: 2.00,
-            time: "2022-5-12 20:38:31",
-            number: 10000,
-        },
-        {
-            price: 2.31,
-            time: "2022-5-11 19:08:11",
-            number: 13400,
-        },
-        {
-            price: 1.98,
-            time: "2022-5-10 07:08:25",
-            number: 9820,
-        },
-        {
-            price: 2.03,
-            time: "2022-5-11 17:54:01",
-            number: 6823,
-        },
-    ]
-
-const StockDataSell = [
-    {
-        price: 2.11,
-        time: "2022-5-10 20:38:31",
-        number: 10800,
-    },
-    {
-        price: 3.01,
-        time: "2022-5-11 17:28:11",
-        number: 13400,
-    },
-    {
-        price: 1.99,
-        time: "2022-5-11 17:08:25",
-        number: 9820,
-    },
-    {
-        price: 2.03,
-        time: "2022-5-12 19:54:01",
-        number: 6823,
-    },
-]
-
-const testdata = {
-    "latest_amount": 2,
-    "latest_price": 12.11
-}
+const StockDataSell = [];
 
 
 function AdminPage() {
@@ -99,9 +34,12 @@ function AdminPage() {
     const [descNewAmount, setDescNewAmount] = useState(0);
     const [riseThreshold, setRiseThreshold] = useState(0);
     const [fallThreshold, setFallThreshold] = useState(0);
-    const showDetails = (id, name) => {
+    const showDetails = (id, name, rise_threshold, fall_threshold) => {
+        console.log(rise_threshold);
         setDescStockId(id);
         setDescStockName(name);
+        setRiseThreshold(rise_threshold);
+        setFallThreshold(fall_threshold);
         request('/admin/latest_transaction', "POST",
             {
                 'Content-Type': 'application/json',
@@ -111,8 +49,8 @@ function AdminPage() {
                 "stock_id": id,
             }).then((response) => {
                 if (response.code == '0') {
-                    setStockNewPrice(response.data.latest_amount);
-                    setStockNewAmount(response.data.latest_price);
+                    setStockNewPrice(response.data.latest_price);
+                    setStockNewAmount(response.data.latest_amount);
                 }
                 else {
                     alert(response.message);
@@ -189,12 +127,22 @@ function AdminPage() {
             dataIndex: "stock_name",
         },
         {
+            title: "涨幅阈值",
+            key: "rise_threshold",
+            dataIndex: "rise_threshold",
+        },
+        {
+            title: "跌幅阈值",
+            key: "fall_threshold",
+            dataIndex: "fall_threshold",
+        },
+        {
             title: "Action",
             key: "action",
-            render: (_, { status, stock_id, stock_name }) => (
+            render: (_, { status, stock_id, stock_name, rise_threshold, fall_threshold }) => (
                 <Space className="admin_space" size="middle">
                     <a className="admin_detail" onClick={() => {
-                        showDetails(stock_id, stock_name);
+                        showDetails(stock_id, stock_name, rise_threshold, fall_threshold);
                     }} >详情</a>
                     <Switch checkedChildren="开启交易" unCheckedChildren="暂停交易" defaultChecked={status == "T" ? true : false}
                         onClick={(checked) => {
@@ -329,14 +277,14 @@ function AdminPage() {
                     <Table dataSource={stockSortOrder == "descend" ? stockDataBuy : stockDataSell} columns={detailColumns} className="admin_table" size="small" bordered="true" />;
                     <InputNumber addonBefore="最大涨幅"
                         style={{ width: '30%', marginTop: "1.5%" }}
-                        defaultValue={0}
+                        defaultValue={riseThreshold}
                         min={0} max={100} step="0.01"
                         formatter={value => `${Number(value).toFixed(2)}%`}
                         parser={value => value.replace('%', '')}
                         onChange={(value) => { setRiseThreshold(value) }} />
                     <InputNumber addonBefore="最大跌幅"
                         style={{ width: '30%', marginTop: "1.5%", marginLeft: "5%" }}
-                        defaultValue={0}
+                        defaultValue={fallThreshold}
                         min={0} max={100} step="0.01"
                         formatter={value => `${Number(value).toFixed(2)}%`}
                         parser={value => value.replace('%', '')}
