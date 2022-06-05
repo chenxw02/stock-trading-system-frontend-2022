@@ -22,8 +22,8 @@ const totalamount = (
 
 const pricerange = (
     <div>
-        <p id="minprice">涨停：无数据</p>
-        <p id="maxprice">跌停：无数据</p>
+        <p id="minprice">跌停：无数据</p>
+        <p id="maxprice">涨停：无数据</p>
     </div>
 )
 
@@ -34,24 +34,12 @@ const maxnumber = (
 )
 
 
-
-function isInTimeRange() {
-    var currentTime = new Date().toLocaleString('en-US', { hour: '2-digit', hour12: false, minute: '2-digit', timeZone: 'Asia/Shanghai' });
-    var starts = ['09:15', '09:30', '13:00'];
-    var ends = ['09:25', '13:00', '15:00'];
-    for (var i = 0; i < starts.length; i++) {
-        if (currentTime >= starts[i] && currentTime <= ends[i]) {
-            return (i == 0 ? 2 : 1);
-        }
-    }
-    return 0;
-}
-
 function getMinMax(sID) {
     return request(
         '/trade/getMinMax',
         "POST",
-        { 'Content-Type': 'application/json' },
+        { 'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem("token") },
         { "stock_ID": sID })
 }
 
@@ -59,7 +47,8 @@ function checkTransaction(sID, tType, price, amount, uID) {
     return request(
         '/trade/checkTransaction',
         "POST",
-        { 'Content-Type': 'application/json' },
+        { 'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem("token") },
         {
             "stock_ID": sID,
             "tType": tType,
@@ -91,7 +80,7 @@ async function trade(e) {
     var amount = state.amount
     var userID = "0000000001";//localStorage.getItem("token");; //TODO: get actual user ID
     var res = await checkTransaction(stockID, transactionType, price, amount, userID);
-    var time = isInTimeRange();
+
 
     console.log(res);
     if (res.code == 0) {
@@ -101,13 +90,6 @@ async function trade(e) {
         message.error(res.message);
     }
 
-
-    if (time > 0) {
-
-    }
-    else {
-        message.error("当前不在可交易时间段");
-    }
 }
 
 async function priceRange() {
@@ -118,12 +100,12 @@ async function priceRange() {
 
     var res = await getMinMax(stockID, transactionType);
     if (res.code == 0) {
-        topLimit = res.data[0];
-        lowLimit = res.data[1];
+        topLimit = res.data[0].toFixed(2);
+        lowLimit = res.data[1].toFixed(2);
     }
     //message.success("lowlimit: "+ lowLimit + " toplimit: " + topLimit);
-    document.getElementById("minprice").innerHTML = "涨停：" + lowLimit;
-    document.getElementById("maxprice").innerHTML = "跌停：" + topLimit;
+    document.getElementById("minprice").innerHTML = "跌停：" + lowLimit;
+    document.getElementById("maxprice").innerHTML = "涨停：" + topLimit;
 
 }
 
@@ -131,7 +113,10 @@ function getMaxAmount(sID, tType, uID, price) {
     return request(
         '/trade/getMaxAmount',
         "POST",
-        { 'Content-Type': 'application/json' },
+        {
+            'Content-Type': 'application/json',
+            'Authorization': localStorage.getItem("token")
+        },
         {
             "stock_ID": sID,
             "tType": tType,
@@ -197,9 +182,6 @@ function sellupdate() {
         })
 }
 
-
-
-
 function showStockInfo() {
     var stock_id = state.stockID;
     if (stock_id.length == 6) {
@@ -212,40 +194,44 @@ function showStockInfo() {
             })
             .then((response) => {
                 console.log('stock info', response);
-                if(response.code==1){
+                if (response.code == 1) {
                     message.error(response.message);
                 }
-                else{
-                    message.success("查询成功");
-                var name=response.data.name;
-                var point = (response.data.price).toFixed(2);
-                var float = ((response.data.price) - (response.data.start)).toFixed(2);
-                var ratio = ((float / response.data.start)*100).toFixed(2);
-                var Dlow = response.data.Dlow;
-                var Dhigh = response.data.Dhigh;
-
-                document.getElementById("Dlow").innerHTML=Dlow;
-                document.getElementById("Dhigh").innerHTML=Dhigh;
-                document.getElementById("name").innerHTML=name;
-
-                if(float<0){
-                    document.getElementById("point").innerHTML=point;
-                    document.getElementById("float").innerHTML='-'+float;
-                    document.getElementById("ratio").innerHTML='-'+ratio+'%';
-                    var obj1 = document.getElementById("point");
-                    obj1.setAttribute('style', 'color: green;');
-                    var obj2 = document.getElementById("float");
-                    obj2.setAttribute('style', 'color: green;');
-                    var obj3 = document.getElementById("ratio");
-                    obj3.setAttribute('style', 'color: green;');
-                }
                 else {
-                    document.getElementById("point").innerHTML=point;
-                    document.getElementById("float").innerHTML='+'+float;
-                    document.getElementById("ratio").innerHTML='+'+ratio+'%';
+                    message.success("查询成功");
+                    var name = response.data.name;
+                    var point = (response.data.price).toFixed(2);
+                    var float = ((response.data.price) - (response.data.start)).toFixed(2);
+                    var ratio = ((float / response.data.start) * 100).toFixed(2);
+                    var Dlow = response.data.Dlow;
+                    var Dhigh = response.data.Dhigh;
+
+                    document.getElementById("Dlow").innerHTML = response.data.Dlow;
+                    document.getElementById("Dhigh").innerHTML = response.data.Dhigh;
+                    document.getElementById("Wlow").innerHTML = response.data.Wlow;
+                    document.getElementById("Whigh").innerHTML = response.data.Whigh;
+                    document.getElementById("Mlow").innerHTML = response.data.Mlow;
+                    document.getElementById("Mhigh").innerHTML = response.data.Mhigh;
+                    document.getElementById("name").innerHTML = name;
+
+                    if (float < 0) {
+                        document.getElementById("point").innerHTML = point;
+                        document.getElementById("float").innerHTML = '-' + float;
+                        document.getElementById("ratio").innerHTML = '-' + ratio + '%';
+                        var obj1 = document.getElementById("point");
+                        obj1.setAttribute('style', 'color: green;');
+                        var obj2 = document.getElementById("float");
+                        obj2.setAttribute('style', 'color: green;');
+                        var obj3 = document.getElementById("ratio");
+                        obj3.setAttribute('style', 'color: green;');
+                    }
+                    else {
+                        document.getElementById("point").innerHTML = point;
+                        document.getElementById("float").innerHTML = '+' + float;
+                        document.getElementById("ratio").innerHTML = '+' + ratio + '%';
+                    }
                 }
-            }
-                
+
 
             })
     }
@@ -336,35 +322,37 @@ function onChange(pagination, filters, sorter, extra) {
 
 function TradePage() {
     const [own, setOwn] = useState([]) //持仓股票：信息
-	useEffect(() => { //查询股票持仓
-		request(
-			'/ownstock/info',
-			"GET",
-			{'Content-Type': 'application/json',
-			'Authorization': localStorage.getItem("token")}) 
-		.then((response) => {
-			console.log('own stock info', response);
-			var list = [];
-			for(var i=0; i<response.data.length; i++){
-				var c = response.data[i].own_amount/response.data[i].own_number; //成本
-				var g = (response.data[i].price-c)*response.data[i].own_number; //盈亏金额
-				var gr = g/(c*response.data[i].own_number); //盈亏比例
-				var temp = { //一条记录
-					key: response.data[i].stock_id,
-					name: response.data[i].stock_name,
-					cost: c.toFixed(2),
-					price: response.data[i].price,
-					num: response.data[i].own_number,
-					ava: response.data[i].own_number-response.data[i].frozen,
-					gnl: g.toFixed(2),
-					gnlratio: gr.toFixed(2),
-					amount: response.data[i].own_number*response.data[i].price,
-				};
-				list.push(temp);
-			}
-			setOwn(list);
-		})
-	}, []);
+    useEffect(() => { //查询股票持仓
+        request(
+            '/ownstock/info',
+            "GET",
+            {
+                'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem("token")
+            })
+            .then((response) => {
+                console.log('own stock info', response);
+                var list = [];
+                for (var i = 0; i < response.data.length; i++) {
+                    var c = response.data[i].own_amount / response.data[i].own_number; //成本
+                    var g = (response.data[i].price - c) * response.data[i].own_number; //盈亏金额
+                    var gr = g / (c * response.data[i].own_number); //盈亏比例
+                    var temp = { //一条记录
+                        key: response.data[i].stock_id,
+                        name: response.data[i].stock_name,
+                        cost: c.toFixed(2),
+                        price: response.data[i].price,
+                        num: response.data[i].own_number,
+                        ava: response.data[i].own_number - response.data[i].frozen,
+                        gnl: g.toFixed(2),
+                        gnlratio: gr.toFixed(2),
+                        amount: response.data[i].own_number * response.data[i].price,
+                    };
+                    list.push(temp);
+                }
+                setOwn(list);
+            })
+    }, []);
 
 
 
@@ -377,12 +365,12 @@ function TradePage() {
                     <div class="app-body-main-content">
                         <section class="service-section">
                             <div className='thiscard'>
-                            <Card>
-                                <p id="name" className='thisname'><a>无数据</a></p>
-                                <p id="point" className='thisinfo'>0.00</p>
-                                <p id="float" className='thisinfo'>0.00</p>
-                                <p id="ratio" className='thisinfo'>0.00%</p>
-                            </Card>
+                                <Card>
+                                    <p id="name" className='thisname'><a>无数据</a></p>
+                                    <p id="point" className='thisinfo'>0.00</p>
+                                    <p id="float" className='thisinfo'>0.00</p>
+                                    <p id="ratio" className='thisinfo'>0.00%</p>
+                                </Card>
                             </div>
 
                         </section>
@@ -392,12 +380,12 @@ function TradePage() {
                                     bordered
                                     column={{ xxl: 3, xl: 3, lg: 3, md: 3, sm: 3, xs: 3, xm: 3 }}
                                 >
-                                    <Descriptions.Item label="今低"><a id="Dlow">0.00</a></Descriptions.Item>
-                                    <Descriptions.Item label="周低"></Descriptions.Item>
-                                    <Descriptions.Item label="月低">18:00:00</Descriptions.Item>
-                                    <Descriptions.Item label="今高"><a id="Dhigh">0.00</a></Descriptions.Item>
-                                    <Descriptions.Item label="周高">$20.00</Descriptions.Item>
-                                    <Descriptions.Item label="月高">$60.00</Descriptions.Item>
+                                    <Descriptions.Item label="今低"><a id="Dlow">null</a></Descriptions.Item>
+                                    <Descriptions.Item label="周低"><a id="Wlow">null</a></Descriptions.Item>
+                                    <Descriptions.Item label="月低"><a id="Mlow">null</a></Descriptions.Item>
+                                    <Descriptions.Item label="今高"><a id="Dhigh">null</a></Descriptions.Item>
+                                    <Descriptions.Item label="周高"><a id="Whigh">null</a></Descriptions.Item>
+                                    <Descriptions.Item label="月高"><a id="Mhigh">null</a></Descriptions.Item>
 
 
                                 </Descriptions>
@@ -406,7 +394,7 @@ function TradePage() {
 
                         <section class="stock-section">
                             <div class="stock">
-                            <Table columns={own_columns} dataSource={own} onChange={onChange} pagination={{ pageSize: 3 }} showSorterTooltip={false} />
+                                <Table columns={own_columns} dataSource={own} onChange={onChange} pagination={false} showSorterTooltip={false} />
                             </div>
                         </section>
 
