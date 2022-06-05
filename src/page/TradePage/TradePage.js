@@ -6,7 +6,6 @@ import { KeyOutlined, UserOutlined } from '@ant-design/icons';
 import request from "../../utils/request";
 
 
-
 //显示资金账户信息
 function ShowFundInfo() {
 	request(
@@ -20,19 +19,11 @@ function ShowFundInfo() {
 			console.log('fund info', response);
 			let num = response.data.balance - response.data.frozen - response.data.taken;
 
-			document.getElementById("asset").innerHTML = "资产：" + response.data.balance;
-			document.getElementById("frozen").innerHTML = "冻结：" + response.data.frozen;
-			document.getElementById("used").innerHTML = "已用：" + response.data.taken;
-			document.getElementById("available").innerHTML = "可用：" + num;
+			document.getElementById("asset").innerHTML = "资产：" + response.data.balance.toFixed(2);
+			document.getElementById("frozen").innerHTML = "冻结：" + response.data.frozen.toFixed(2);
+			document.getElementById("used").innerHTML = "已用：" + response.data.taken.toFixed(2);
+			document.getElementById("available").innerHTML = "可用：" + num.toFixed(2);
 
-			//点击查看更多信息后显示的部分
-			document.getElementById("fund_acc").innerHTML = "资金账号：" + response.data.fund_account_number;
-			document.getElementById("asset2").innerHTML = "资产：" + response.data.balance;
-			document.getElementById("frozen2").innerHTML = "冻结：" + response.data.frozen;
-			document.getElementById("used2").innerHTML = "已用：" + response.data.taken;
-			document.getElementById("available2").innerHTML = "可用：" + num;
-			document.getElementById("position").innerHTML = "仓位：" + (response.data.taken * 100 / response.data.balance) + "%";
-			document.getElementById("take").innerHTML = "可取：" + (num - response.data.sellamount);
 		})
 }
 
@@ -201,12 +192,12 @@ function TradePage() {
 						key: response.data[i].stock_id,
 						name: response.data[i].stock_name,
 						cost: c.toFixed(2),
-						price: response.data[i].price,
+						price: response.data[i].price.toFixed(2),
 						num: response.data[i].own_number,
 						ava: response.data[i].own_number - response.data[i].frozen,
 						gnl: g.toFixed(2),
-						gnlratio: gr.toFixed(2),
-						amount: response.data[i].own_number * response.data[i].price,
+						gnlratio: gr.toFixed(2)+'%',
+						amount: (response.data[i].own_number * response.data[i].price).toFixed(2),
 					};
 					list.push(temp);
 				}
@@ -225,17 +216,17 @@ function TradePage() {
 				for (var i = 0; i < response.data.length; i++) {
 					var flag = response.data[i].flag;
 					var name = response.data[i].name;
-					var tprice = response.data[i].tprice;
+					var tprice = response.data[i].tprice.toFixed(2);
 					var amount = response.data[i].amount;
 					var tnum = response.data[i].tnum;
 					var anum = response.data[i].cnum;
 					var state = response.state;
 					var thistime = String(response.data[i].time);
-					var thistprice = String(response.data[i].tprice);
+					var thistprice = String(response.data[i].tprice.toFixed(2));
 					var thistnum = String(response.data[i].tnum);
 					var thisanum = String(response.data[i].anum);
 					if (response.data[i].anum != 0) {
-						var thisaprice = String((response.data[i].amount) / (response.data[i].anum))
+						var thisaprice = String(((response.data[i].amount) / (response.data[i].anum)).toFixed(2))
 					}
 					else {
 						var thisaprice = '0';
