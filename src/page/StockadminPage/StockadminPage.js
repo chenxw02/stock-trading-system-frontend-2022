@@ -1,6 +1,7 @@
 import { Layout, Descriptions,Badge, Table,Tabs,Space,Tag} from 'antd';
 import React,{useState}from 'react';
 import Head from './Head';
+import request from "../../utils/request";
 const {Footer,Content} = Layout;
   const { TabPane } = Tabs;
 function callback(key) {
@@ -69,36 +70,62 @@ function MoneyPage() {
           key: 'action',
           render: (text, record) => (
             <Space size="middle">
-              <a  onClick={() =>shenpi1(1,record)}>通过</a>
-              <a onClick={() =>shenpi2(0,record)}>不通过</a>
+              <a  onClick={() =>{shenpi1(1,record)
+              request('/account_admin/handle_deal', "POST", { 'Content-Type': 'application/json' },
+              {
+                "deal_id": record["id_1"],
+                "ifapproval": ifapproval
+              }).then((response) => {
+                console.log(response);
+                if (response.code === '0') {
+                  alert("审批成功！");
+                }
+                else {
+                  alert(response.message);
+                }
+              });
+              }}>通过</a>
+              <a onClick={() =>{shenpi2(0,record)
+              request('/account_admin/handle_deal', "POST", { 'Content-Type': 'application/json' },
+              {
+                "deal_id": record["id_1"],
+                "ifapproval": ifapproval
+              }).then((response) => {
+                console.log(response);
+                if (response.code === '0') {
+                  alert("审批成功！");
+                }
+                else {
+                  alert(response.message);
+                }
+              });
+              }}>不通过</a>
+
             </Space>
           ),
         },
       ];
       
-      let data = [
-        {
-          key: '1',
-          id_1:'1',
-          stock: '43124',
-          id: 32455436,
-          tags: ['pass'],
-        },
-        {
-            key: '2',
-            id_1:'2',
-            stock: '35423',
-            id: 532453434,
-            tags: ['fail'],
-        },
-        {
-            key: '3',
-            id_1:'3',
-            stock: '34324',
-            id: 23413244,
-            tags: ['provisional'],
-        },
-      ];
+      useEffect(() => { //查询审批
+        request(
+          '/account_admin/show_deal',
+          "GET",
+          ) 
+        .then((response) => {
+          console.log(response);
+          let data = [];
+          for(var i=0; i<response.data.length; i++){
+            var temp = { //一条记录
+              "id_1": response.data[i]["deal_id"],
+              "stock": response.data[i]["securities_account_number"],
+              "id": response.data[i]["person_id"],
+              "tags": response.data[i]["status"]
+            };
+            data.push(temp);
+          }
+          setOwn(data);
+        })
+      }, []);
     return(
        
         <div>
