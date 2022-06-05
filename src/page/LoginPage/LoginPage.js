@@ -87,7 +87,24 @@ function LoginPage() {
                             onClick={() => {
                                 switch (identity) {
                                     case "普通用户":
-                                        window.location.href = "./trade";
+                                        request(
+                                            '/trade/login',
+                                            "POST",
+                                            { 'Content-Type': 'application/json' },
+                                            {
+                                                "user_id": aid,
+                                                "password": password
+                                            }
+                                        ).then((response) => {
+                                            console.log(response);
+                                            if (response.code == '0') {
+                                                localStorage.setItem("token", response.data);
+                                                window.location.href = "./trade";
+                                            }
+                                            else {
+                                                alert(response.message);
+                                            }
+                                        });
                                         break;
                                     case "账户管理员":
                                         request(
