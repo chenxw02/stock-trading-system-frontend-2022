@@ -1,5 +1,5 @@
-import { Layout, Descriptions,Badge, Table,Tabs,Space,Tag} from 'antd';
-import React,{useState}from 'react';
+import { Layout, Descriptions,Badge, Table,Tabs,Space,Tag, Button} from 'antd';
+import React,{useState,useEffect}from 'react';
 import Head from './Head';
 import request from "../../utils/request";
 const {Footer,Content} = Layout;
@@ -8,9 +8,33 @@ function callback(key) {
   console.log(key);
 }
 
-  
 function MoneyPage() {
-     const [ifapproval,setapproval]=useState("1");
+    const[mydata,setdata]=useState();
+    const[data1,setdata1]=useState();
+
+    useEffect(() => { //查询审批
+      request(
+          '/account_admin/show_deal',
+          "GET",
+          {'Content-Type': 'application/json',
+			'Authorization': localStorage.getItem("token")}
+        ).then((response) => {
+          console.log(response);
+           setdata1([]);
+          for(var i=0; i<response.data.length; i++){
+           var temp = { //一条记录
+              "id_1": response.data[i]["deal_id"],
+              "stock": response.data[i]["securities_account_number"],
+              "id": response.data[i]["person_id"],
+              "tags": response.data[i]["status"]
+            };
+            data1.push(temp);
+          }
+          console.log("this",data1);         
+        }
+        )
+      }, );
+    const [ifapproval,setapproval]=useState("1");
     const shenpi1=(e,r)=>
      {
       console.log(r["id_1"]);
@@ -105,27 +129,6 @@ function MoneyPage() {
           ),
         },
       ];
-      
-      useEffect(() => { //查询审批
-        request(
-          '/account_admin/show_deal',
-          "GET",
-          ) 
-        .then((response) => {
-          console.log(response);
-          let data = [];
-          for(var i=0; i<response.data.length; i++){
-            var temp = { //一条记录
-              "id_1": response.data[i]["deal_id"],
-              "stock": response.data[i]["securities_account_number"],
-              "id": response.data[i]["person_id"],
-              "tags": response.data[i]["status"]
-            };
-            data.push(temp);
-          }
-          setOwn(data);
-        })
-      }, []);
     return(
        
         <div>
@@ -148,12 +151,18 @@ function MoneyPage() {
     <TabPane tab="审批" key="1">
     </TabPane>
     </Tabs>
-    <Table columns={columns} dataSource={data} />
+    <Button>查询</Button>
+    <Table columns={columns} dataSource={data1} />
     </Content>
        </div>
     <Footer style={{ textAlign: 'center' }}>管理员界面</Footer>
+    <script>
+        setInterval(showTime, 1000);
+    </script>
         </div>
+      
     )
+    
 }
 
 
