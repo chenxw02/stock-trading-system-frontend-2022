@@ -121,16 +121,16 @@ function showStockInfo() {
 					var float = ((response.data.price) - (response.data.start)).toFixed(2);
 					var ratio = ((float / response.data.start) * 100).toFixed(2);
 
-					document.getElementById("end").innerHTML = response.data.end;
-					document.getElementById("open").innerHTML = response.data.start;
-					document.getElementById("Dlow").innerHTML = response.data.Dlow;
-					document.getElementById("Dhigh").innerHTML = response.data.Dhigh;
-					document.getElementById("Wlow").innerHTML = response.data.Wlow;
-					document.getElementById("Whigh").innerHTML = response.data.Whigh;
-					document.getElementById("Mlow").innerHTML = response.data.Mlow;
-					document.getElementById("Mhigh").innerHTML = response.data.Mhigh;
+					document.getElementById("end").innerHTML = response.data.end.toFixed(2);
+					document.getElementById("open").innerHTML = response.data.start.toFixed(2);
+					document.getElementById("Dlow").innerHTML = response.data.Dlow.toFixed(2);
+					document.getElementById("Dhigh").innerHTML = response.data.Dhigh.toFixed(2);
+					document.getElementById("Wlow").innerHTML = response.data.Wlow.toFixed(2);
+					document.getElementById("Whigh").innerHTML = response.data.Whigh.toFixed(2);
+					document.getElementById("Mlow").innerHTML = response.data.Mlow.toFixed(2);
+					document.getElementById("Mhigh").innerHTML = response.data.Mhigh.toFixed(2);
 					document.getElementById("name").innerHTML = response.data.name;
-					document.getElementById("volume").innerHTML = response.data.volume;
+					document.getElementById("volume").innerHTML = response.data.volume.toFixed(2);
 
 
 					if(response.data.state=='T'){
@@ -244,7 +244,6 @@ function TradePage() {
 					{/* 右侧 */}
 					<div class="functions">
 
-						{/* 资金账户 */}
 						<div class="money">
 							<div className='indexcard'>
 								<Card>
