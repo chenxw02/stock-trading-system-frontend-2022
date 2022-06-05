@@ -76,7 +76,7 @@ function MoneyPage() {
         },
       ];
       
-      const data = [
+      let data = [
         {
           key: '1',
           id_1:'1',
