@@ -237,7 +237,7 @@ function TradePage() {
 					else if (response.data[i].state == 'P') {
 						var thistag = '部分成交'
 					}
-					else if (response.data[i].state == 'A') {
+					else if (response.data[i].state == 'T') {
 						var thistag = '全部成交'
 					}
 					else if (response.data[i].state == 'E') {
