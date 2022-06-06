@@ -1,5 +1,5 @@
 //TODO: 这里写网络请求函数
-const url_head = 'http://localhost:5000/'
+const url_head = 'http://110.42.175.148:5000'
 // 'http://localhost:5000'
 /* 
 data指的是body的内容
