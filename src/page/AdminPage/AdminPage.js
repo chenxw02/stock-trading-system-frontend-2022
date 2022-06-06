@@ -277,14 +277,14 @@ function AdminPage() {
                     <Table dataSource={stockSortOrder == "descend" ? stockDataBuy : stockDataSell} columns={detailColumns} className="admin_table" size="small" bordered="true" />;
                     <InputNumber addonBefore="最大涨幅"
                         style={{ width: '30%', marginTop: "1.5%" }}
-                        defaultValue={riseThreshold}
+                        value={riseThreshold}
                         min={0} max={100} step="0.01"
                         formatter={value => `${Number(value).toFixed(2)}%`}
                         parser={value => value.replace('%', '')}
                         onChange={(value) => { setRiseThreshold(value) }} />
                     <InputNumber addonBefore="最大跌幅"
                         style={{ width: '30%', marginTop: "1.5%", marginLeft: "5%" }}
-                        defaultValue={fallThreshold}
+                        value={fallThreshold}
                         min={0} max={100} step="0.01"
                         formatter={value => `${Number(value).toFixed(2)}%`}
                         parser={value => value.replace('%', '')}
@@ -344,6 +344,9 @@ function AdminPage() {
                     />
                     <Button type="primary" style={{ width: '20%', marginTop: "3%", marginLeft: "75%" }}
                         onClick={() => {
+                            if (newPassword.length == 0 || oldPassword.length == 0 || confirmPassword.length == 0) {
+                                alert("输入不可为空!");
+                            }
                             if (newPassword == confirmPassword) {
                                 request('/admin', "PUT",
                                     {
