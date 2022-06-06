@@ -77,7 +77,7 @@ function MoneyPage() {
         })
     }
     else {
-      request('/account_admin/add_fund_account', "POST", { 'Content-Type': 'application/json' },
+      request('/account_admin/re_add_fund_account', "POST", { 'Content-Type': 'application/json' },
         {
           "label": value_money_account,
           "id_num/legal_register_num": securities_account_number,
