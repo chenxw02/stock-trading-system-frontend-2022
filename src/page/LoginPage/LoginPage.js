@@ -127,24 +127,33 @@ function LoginPage() {
                                     // window.location.href="./stockadmin";
                                     // break;
                                     case "股票管理员":
-                                        request(
-                                            "/admin/login",
-                                            "POST",
-                                            { "Content-Type": "application/json" },
-                                            {
-                                                admin_id: aid,
-                                                password: password,
-                                            }
-                                        ).then((response) => {
-                                            console.log(response);
-                                            if (response.code == "0") {
-                                                localStorage.setItem("token", response.data);
-                                                localStorage.setItem("admin_name", aid);
-                                                window.location.href = "./admin";
-                                            } else {
-                                                alert(response.message);
-                                            }
-                                        });
+                                        console.log(aid.length);
+                                        if (aid.length > 20) {
+                                            alert("用户名长度不能超过20!");
+                                        }
+                                        else if (aid.length == 0 || password.length == 0) {
+                                            alert("输入不可为空!");
+                                        }
+                                        else {
+                                            request(
+                                                "/admin/login",
+                                                "POST",
+                                                { "Content-Type": "application/json" },
+                                                {
+                                                    admin_id: aid,
+                                                    password: password,
+                                                }
+                                            ).then((response) => {
+                                                console.log(response);
+                                                if (response.code == "0") {
+                                                    localStorage.setItem("token", response.data);
+                                                    localStorage.setItem("admin_name", aid);
+                                                    window.location.href = "./admin";
+                                                } else {
+                                                    alert(response.message);
+                                                }
+                                            });
+                                        }
                                         break;
                                 }
                             }}
@@ -166,7 +175,7 @@ function LoginPage() {
                     </div>
                 </Col>
             </Row>
-        </div>
+        </div >
     );
 }
 

@@ -36,10 +36,6 @@ function AdminPage() {
     const [fallThreshold, setFallThreshold] = useState(0);
     const showDetails = (id, name, rise_threshold, fall_threshold) => {
         console.log(rise_threshold);
-        setDescStockId(id);
-        setDescStockName(name);
-        setRiseThreshold(rise_threshold);
-        setFallThreshold(fall_threshold);
         request('/admin/latest_transaction', "POST",
             {
                 'Content-Type': 'application/json',
@@ -142,7 +138,11 @@ function AdminPage() {
             render: (_, { status, stock_id, stock_name, rise_threshold, fall_threshold }) => (
                 <Space className="admin_space" size="middle">
                     <a className="admin_detail" onClick={() => {
+                        setDescStockId(stock_id);
+                        setDescStockName(stock_name);
                         showDetails(stock_id, stock_name, rise_threshold, fall_threshold);
+                        setRiseThreshold(rise_threshold);
+                        setFallThreshold(fall_threshold);
                     }} >详情</a>
                     <Switch checkedChildren="开启交易" unCheckedChildren="暂停交易" defaultChecked={status == "T" ? true : false}
                         onClick={(checked) => {
