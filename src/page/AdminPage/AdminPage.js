@@ -37,6 +37,10 @@ function AdminPage() {
     
     const showDetails = (id, name, rise_threshold, fall_threshold) => {
         console.log(rise_threshold);
+        setDescStockId(id);
+        setDescStockName(name);
+        setRiseThreshold(rise_threshold);
+        setFallThreshold(fall_threshold);
         request('/admin/latest_transaction', "POST",
             {
                 'Content-Type': 'application/json',
@@ -139,12 +143,6 @@ function AdminPage() {
             render: (_, { status, stock_id, stock_name, rise_threshold, fall_threshold }) => (
                 <Space className="admin_space" size="middle">
                     <a className="admin_detail" onClick={() => {
-                        setDescStockId(stock_id);
-                        setDescStockName(stock_name);
-                        setRiseThreshold(rise_threshold);
-                        setRiseThreshold(pre=>{console.log(pre);return pre;});
-                        setFallThreshold(fall_threshold);
-                        setFallThreshold(pre=>{console.log(pre);return pre;});
                         showDetails(stock_id, stock_name, rise_threshold, fall_threshold);
                     }} >详情</a>
                     <Switch checkedChildren="开启交易" unCheckedChildren="暂停交易" defaultChecked={status == "T" ? true : false}
@@ -243,7 +241,7 @@ function AdminPage() {
             <div className='admin_table_back'>
                 <Table dataSource={stocks}
                     //等等data可以改成stocks
-                    columns={columns} className="admin_table" bordered="true" />;
+                    columns={columns} className="admin_table" bordered="true" />
 
                 <Modal title="股票详情" width={800} visible={isDetailsVisible} onOk={() => handleOk()} onCancel={() => handleCancel()}
                     footer={[
@@ -277,17 +275,17 @@ function AdminPage() {
                         <Column title="进入系统时间" dataIndex="time" />
                         <Column title="股数" dataIndex="number" />
                     </Table> */}
-                    <Table dataSource={stockSortOrder == "descend" ? stockDataBuy : stockDataSell} columns={detailColumns} className="admin_table" size="small" bordered="true" />;
+                    <Table dataSource={stockSortOrder == "descend" ? stockDataBuy : stockDataSell} columns={detailColumns} className="admin_table" size="small" bordered="true" />
                     <InputNumber addonBefore="最大涨幅"
                         style={{ width: '30%', marginTop: "1.5%" }}
-                        defaultValue={riseThreshold}
+                        value={riseThreshold}
                         min={0} max={100} step="0.01"
                         formatter={value => `${Number(value).toFixed(2)}%`}
                         parser={value => value.replace('%', '')}
                         onChange={(value) => { setRiseThreshold(value) }} />
                     <InputNumber addonBefore="最大跌幅"
                         style={{ width: '30%', marginTop: "1.5%", marginLeft: "5%" }}
-                        defaultValue={fallThreshold}
+                        value={fallThreshold}
                         min={0} max={100} step="0.01"
                         formatter={value => `${Number(value).toFixed(2)}%`}
                         parser={value => value.replace('%', '')}
