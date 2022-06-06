@@ -196,7 +196,7 @@ function TradePage() {
 						num: response.data[i].own_number,
 						ava: response.data[i].own_number - response.data[i].frozen,
 						gnl: g.toFixed(2),
-						gnlratio: gr.toFixed(2)+'%',
+						gnlratio: (gr*100).toFixed(2)+'%',
 						amount: (response.data[i].own_number * response.data[i].price).toFixed(2),
 					};
 					list.push(temp);
