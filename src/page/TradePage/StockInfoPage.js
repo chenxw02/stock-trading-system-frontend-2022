@@ -45,12 +45,12 @@ async function getInfo() {
 					document.getElementById("SZ").innerHTML = message2[3];
 				}
 				
-				if(message3[31<0]){
+				if(message3[31]<0){
 					document.getElementById("CY").innerHTML = message3[3];
 					var cy = document.getElementById("CY");
 					cy.setAttribute('style', 'color: green;');
 				}
-				else if(message3[31]>0){
+				else if(message3[31]>=0){
 					document.getElementById("CY").innerHTML = message3[3];
 				}	
 
