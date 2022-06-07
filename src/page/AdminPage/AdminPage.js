@@ -34,6 +34,7 @@ function AdminPage() {
     const [descNewAmount, setDescNewAmount] = useState(0);
     const [riseThreshold, setRiseThreshold] = useState(0);
     const [fallThreshold, setFallThreshold] = useState(0);
+    
     const showDetails = (id, name, rise_threshold, fall_threshold) => {
         console.log(rise_threshold);
         setDescStockId(id);
@@ -240,7 +241,7 @@ function AdminPage() {
             <div className='admin_table_back'>
                 <Table dataSource={stocks}
                     //等等data可以改成stocks
-                    columns={columns} className="admin_table" bordered="true" />;
+                    columns={columns} className="admin_table" bordered="true" />
 
                 <Modal title="股票详情" width={800} visible={isDetailsVisible} onOk={() => handleOk()} onCancel={() => handleCancel()}
                     footer={[
@@ -274,17 +275,17 @@ function AdminPage() {
                         <Column title="进入系统时间" dataIndex="time" />
                         <Column title="股数" dataIndex="number" />
                     </Table> */}
-                    <Table dataSource={stockSortOrder == "descend" ? stockDataBuy : stockDataSell} columns={detailColumns} className="admin_table" size="small" bordered="true" />;
+                    <Table dataSource={stockSortOrder == "descend" ? stockDataBuy : stockDataSell} columns={detailColumns} className="admin_table" size="small" bordered="true" />
                     <InputNumber addonBefore="最大涨幅"
                         style={{ width: '30%', marginTop: "1.5%" }}
-                        defaultValue={riseThreshold}
+                        value={riseThreshold}
                         min={0} max={100} step="0.01"
                         formatter={value => `${Number(value).toFixed(2)}%`}
                         parser={value => value.replace('%', '')}
                         onChange={(value) => { setRiseThreshold(value) }} />
                     <InputNumber addonBefore="最大跌幅"
                         style={{ width: '30%', marginTop: "1.5%", marginLeft: "5%" }}
-                        defaultValue={fallThreshold}
+                        value={fallThreshold}
                         min={0} max={100} step="0.01"
                         formatter={value => `${Number(value).toFixed(2)}%`}
                         parser={value => value.replace('%', '')}
