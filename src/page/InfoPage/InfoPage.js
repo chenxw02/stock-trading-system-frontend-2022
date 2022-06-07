@@ -200,7 +200,7 @@ function QueryLogin() {
     const [Stock, setStock] = useState("");//查询股票
     return (
         <div>
-            <InfoHead ID={ID} />
+            <InfoHead ID={"用户："+ID} />
             {/*导航栏*/}
             <Row>
                 <Col span={3}>
@@ -251,7 +251,7 @@ function QueryResult() {
     const [Stock, setStock] = useState(location.state.Stock);
     return (
         <div>
-            <InfoHead ID={ID} />
+            <InfoHead ID={"用户：" + ID} />
             {/*导航栏*/}
             <div>
                 <Row>
@@ -268,11 +268,11 @@ function QueryResult() {
                                 navigate('/change', { state: { ID: ID, Authority: Authority } });
                             }}>修改密码</Menu.Item>
                             <Menu.Item onClick={() => {
-                                window.location.href = "./info";
+                                window.location.href = "./";
                             }}>退出登录</Menu.Item>
                         </Menu>;
                     </Col>
-                    <Col span={15}>
+                    <Col span={16}>
                         <Input size="large"
                             placeholder={Stock}
                             onChange={(event) => {
@@ -280,7 +280,7 @@ function QueryResult() {
                             }}
                         />
                     </Col>
-                    <Col>
+                    <Col span={4} push={1}>
                         <Button
                             type="primary"
                             size="large"
@@ -301,7 +301,7 @@ function QueryResult() {
                                                 var n = 0;
                                                 for (let i = 0; i <= response.data.length; i++) {                                                       
                                                     if (response.data[i].buy_sell_flag != "") {
-                                                        descrip = "交易类型:" + response.data[i].buy_sell_flag + " 交易日期:" + handledate(response.data[i].transaction_date) + " 交易时间:" + handletime(response.data[i].transaction_time) + " 交易数量:"
+                                                        descrip = "交易日期:" + handledate(response.data[i].transaction_date) + " 交易时间:" + handletime(response.data[i].transaction_time) + " 交易数量:"
                                                             + response.data[i].transaction_number + " 交易单价:" + response.data[i].transaction_price + " 交易总额:" + response.data[i].transaction_amount;
                                                     }
                                                     else {
@@ -318,7 +318,7 @@ function QueryResult() {
                                                     })
                                                     while (response.data[i + 1].stock_id == response.data[i].stock_id) {
                                                         i++;
-                                                        descrip += '\n'+"交易类型:" + response.data[i].buy_sell_flag + " 交易日期:" + handledate(response.data[i].transaction_date) + " 交易时间:" + handletime(response.data[i].transaction_time) + " 交易数量:"
+                                                        descrip +=  " \n交易日期:" + handledate(response.data[i].transaction_date) + " 交易时间:" + handletime(response.data[i].transaction_time) + " 交易数量:"
                                                             + response.data[i].transaction_number + " 交易单价:" + response.data[i].transaction_price + " 交易总额:" + response.data[i].transaction_amount;
                                                         if (i == response.data.length - 1) {
                                                             break;
@@ -437,7 +437,7 @@ function Upgrade() {
     const navigate = useNavigate();
     return (
         <div>
-            <InfoHead ID={ID} />
+            <InfoHead ID={"用户：" + ID} />
             <Input
                 className="login_inputbox_user"
                 placeholder={ID}
@@ -494,7 +494,7 @@ function Change() {
     const navigate = useNavigate();
     return (
         <div>
-            <InfoHead ID={ID} />
+            <InfoHead ID={"用户：" + ID} />
             <Input
                 className="login_inputbox_user"
                 placeholder={ID}
@@ -562,7 +562,7 @@ function HighQueryResult() {
     console.log(id);
     return (
         <div>
-            <InfoHead ID={ID}></InfoHead>
+            <InfoHead ID={"用户：" + ID}></InfoHead>
             <HighQueryResult1 org={orgifo1}></HighQueryResult1>
             <Col push={11}>
                 <Button type="primary" size="large"
