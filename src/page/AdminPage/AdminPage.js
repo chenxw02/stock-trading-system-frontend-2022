@@ -211,15 +211,21 @@ function AdminPage() {
         })
 
     }, stocks);
+
+    //下面这部分是:每秒执行一次，获得当前时间并且将该事件替换html中id为"datetime"的组件的值
+    //不把他写到return里面使得该函数脱离react的自动渲染。
+    const ticking = () => {
+        document.getElementById('datetime').innerHTML=new Date();
+    }
+    setInterval(ticking,1000);
+
     return (
         <div className='admin_background'>
 
             <div className='admin_header'>
                 <div className='admin_welcome'>Dear {localStorage.getItem('admin_name')}</div>
 
-                <div id="datetime" className="admin_datetime">
-                    {setInterval("document.getElementById('datetime').innerHTML=new Date();", 1000)}
-                </div>
+                <div id="datetime" className="admin_datetime"></div>
 
                 <div className='admin_button_box'>
                     <Button type="primary" danger className="admin_button"
