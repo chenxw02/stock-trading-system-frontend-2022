@@ -115,7 +115,7 @@ function AdminPage() {
                         let day = parseInt(oringin_time / 1000000);
                         let str_day = (day < 10) ? ("0" + day) : ("" + day);
                         console.log(str_sec, str_min, str_hour, str_day);
-                        tmp[i].time = "2022-06-" + str_day + ":" + str_hour + ":" + str_min + ":" + str_sec;
+                        tmp[i].time = "2022-06-" + str_day + ": " + str_hour + ": " + str_min + ": " + str_sec;
                         console.log(tmp[i].time);
                     }
 
