@@ -216,8 +216,8 @@ function showStockInfo() {
 
                     if (float < 0) {
                         document.getElementById("point").innerHTML = point;
-                        document.getElementById("float").innerHTML = '-' + float;
-                        document.getElementById("ratio").innerHTML = '-' + ratio + '%';
+                        document.getElementById("float").innerHTML =  float;
+                        document.getElementById("ratio").innerHTML =  ratio + '%';
                         var obj1 = document.getElementById("point");
                         obj1.setAttribute('style', 'color: green;');
                         var obj2 = document.getElementById("float");
@@ -434,7 +434,7 @@ function TradePage() {
                                     }}
                                         onMouseEnter={
                                             priceRange}
-                                        placeholder={"请输入价格"} style={{ width: '80%' }} step='0.01' min={0} max={100} />
+                                        placeholder={"请输入价格"} style={{ width: '80%' }} step='0.01' min={0} max={1000000} />
                                 </Popover>
                             </Input.Group>
                             <br />

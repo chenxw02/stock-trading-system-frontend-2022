@@ -45,12 +45,12 @@ async function getInfo() {
 					document.getElementById("SZ").innerHTML = message2[3];
 				}
 				
-				if(message3[31<0]){
+				if(message3[31]<0){
 					document.getElementById("CY").innerHTML = message3[3];
 					var cy = document.getElementById("CY");
 					cy.setAttribute('style', 'color: green;');
 				}
-				else if(message3[31]>0){
+				else if(message3[31]>=0){
 					document.getElementById("CY").innerHTML = message3[3];
 				}	
 
@@ -149,8 +149,8 @@ function showStockInfo() {
 
 					if (float < 0) {
 						document.getElementById("point").innerHTML = point;
-						document.getElementById("float").innerHTML = '-' + float;
-						document.getElementById("ratio").innerHTML = '-' + ratio + '%';
+						document.getElementById("float").innerHTML = float;
+						document.getElementById("ratio").innerHTML = ratio + '%';
 						var obj1 = document.getElementById("point");
 						obj1.setAttribute('style', 'color: green;');
 						var obj2 = document.getElementById("float");
