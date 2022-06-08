@@ -124,25 +124,29 @@ function InfoPage() {
     return (
         <div>
             <InfoHead ID="游客" />
-            <Input
-                className="login_inputbox_user"
-                placeholder="账户"
-                prefix={<UserOutlined />}
-                onChange={(event) => {
-                    setID(event.target.value);
-                }}
-            />
-            <Input.Password
-                className="login_inputbox_pwd"
-                placeholder="密码"
-                prefix={<LockOutlined />}
-                onChange={(event) => {
-                    setPassword(event.target.value);
-                }}
-            />
             {/*修改于2022/6/3，增加边界值判断*/}
-            <Row >
-                <Col push={10}>
+            <Row type="flex" justify="center">
+                <Col span={18}>
+                    <Input
+                        className="login_inputbox_user"
+                        placeholder="账户"
+                        prefix={<UserOutlined />}
+                        onChange={(event) => {
+                            setID(event.target.value);
+                        }}
+                    />
+                    <Input.Password
+                        className="login_inputbox_pwd"
+                        placeholder="密码"
+                        prefix={<LockOutlined />}
+                        onChange={(event) => {
+                            setPassword(event.target.value);
+                        }}
+                    />
+                </Col>
+            </Row>
+            <Row type="flex" justify="center">
+                <Col span={3}>
                     <Button type="primary" size="large"
                         onClick={() => {
                             if (ID.length > 20) {
@@ -176,15 +180,15 @@ function InfoPage() {
                             }
 
                         }}
-                    > 登录</Button>                   
+                    > 登录</Button>
                 </Col>
-                <Col push={12}>
+
+                <Col>
                     <Button type="primary" size="large"
                         onClick={() => { window.location.href = "./register"; }}
                     > 注册</Button>
                 </Col>
             </Row>
-            
         </div>
     )
 }
@@ -200,7 +204,7 @@ function QueryLogin() {
     const [Stock, setStock] = useState("");//查询股票
     return (
         <div>
-            <InfoHead ID={"用户："+ID} />
+            <InfoHead ID={"用户：" + ID} />
             {/*导航栏*/}
             <Row>
                 <Col span={3}>
@@ -221,8 +225,8 @@ function QueryLogin() {
                     </Menu>;
                 </Col>
             </Row>
-            <Row>
-                <Col span={15} push={3}>
+            <Row type="flex" justify="center">
+                <Col span={15}>
                     <Input placeholder="请输入股票代码或股票名称"
                         onChange={(event) => {
                             setStock(event.target.value);
@@ -299,7 +303,7 @@ function QueryResult() {
                                             if (response.code == '0') {
                                                 var descrip = '';
                                                 var n = 0;
-                                                for (let i = 0; i <= response.data.length; i++) {                                                       
+                                                for (let i = 0; i <= response.data.length; i++) {
                                                     if (response.data[i].buy_sell_flag != "") {
                                                         descrip = "交易日期:" + handledate(response.data[i].transaction_date) + " 交易时间:" + handletime(response.data[i].transaction_time) + " 交易数量:"
                                                             + response.data[i].transaction_number + " 交易单价:" + response.data[i].transaction_price + " 交易总额:" + response.data[i].transaction_amount;
@@ -318,7 +322,7 @@ function QueryResult() {
                                                     })
                                                     while (response.data[i + 1].stock_id == response.data[i].stock_id) {
                                                         i++;
-                                                        descrip +=  " \n交易日期:" + handledate(response.data[i].transaction_date) + " 交易时间:" + handletime(response.data[i].transaction_time) + " 交易数量:"
+                                                        descrip += " \n交易日期:" + handledate(response.data[i].transaction_date) + " 交易时间:" + handletime(response.data[i].transaction_time) + " 交易数量:"
                                                             + response.data[i].transaction_number + " 交易单价:" + response.data[i].transaction_price + " 交易总额:" + response.data[i].transaction_amount;
                                                         if (i == response.data.length - 1) {
                                                             break;
@@ -337,10 +341,6 @@ function QueryResult() {
                                 }
                             }}
                         >查询</Button>
-                    </Col>
-                    <Col push={1}>
-                        {/*传递到新查询页面,测试用*/}
-                        {/*<h1>{location.state.Stock}</h1>*/}
                     </Col>
                     {/*股票信息组件*/}
                     <Col push={3}>
@@ -362,69 +362,73 @@ function Register() {
     return (
         <div>
             <InfoHead ID="新用户" />
-            <Input
-                className="login_inputbox_user"
-                placeholder="账户"
-                prefix={<UserOutlined />}
-                onChange={(event) => {
-                    setID(event.target.value);
-                }}
-            />
-            <Input.Password
-                className="login_inputbox_pwd"
-                placeholder="密码"
-                prefix={<LockOutlined />}
-                onChange={(event) => {
-                    setPassword(event.target.value);
-                }}
-            />
-            <Input.Password
-                className="login_inputbox_pwd"
-                placeholder="确认密码"
-                prefix={<LockOutlined />}
-                onChange={(event) => {
-                    setRePassword(event.target.value);
-                }}
-            />
-            {/*修改于2022/6/3，增加边界值判断*/}
-            
-            <Col push={11}>
-                <Button type="primary" size="large"
-                    onClick={() => {
-                        if (ID.length > 20) {
-                            alert("账户不能超过20位！")
-                        } else if (ID.length == 0) {
-                            alert("账户不能为空！")
-                        } else if (Password != RePassword) {
-                            alert("两次输入密码不同！")
-                        } else if (Password.length > 20) {
-                            alert("密码不能超过20位！")
-                        } else if (Password.length == 0) {
-                            alert("密码不能为空")
-                        } else if (/.*[\u4e00-\u9fa5]+.*$/.test(Password)) {
-                            alert("密码含有中文！")
-                        }
-                        else {
-                            request('/query_user/register', "POST", { 'Content-Type': 'application/json' },
-                                {
-                                    "ID": ID,
-                                    "password": Password
-                                }).then((response) => {
-                                    if (response.code == '0') {
-                                        alert("注册成功");
-                                        navigate('/info')
-                                    }
-                                    else {
-                                        alert(response.message);
-                                    }
-                                })
-                        }
+            <Row type="flex" justify="center">
+                <Col span={18}>
+                    <Input
+                        className="login_inputbox_user"
+                        placeholder="账户"
+                        prefix={<UserOutlined />}
+                        onChange={(event) => {
+                            setID(event.target.value);
+                        }}
+                    />
+                    <Input.Password
+                        className="login_inputbox_pwd"
+                        placeholder="密码"
+                        prefix={<LockOutlined />}
+                        onChange={(event) => {
+                            setPassword(event.target.value);
+                        }}
+                    />
+                    <Input.Password
+                        className="login_inputbox_pwd"
+                        placeholder="确认密码"
+                        prefix={<LockOutlined />}
+                        onChange={(event) => {
+                            setRePassword(event.target.value);
+                        }}
+                    />
+                </Col>
+                {/*修改于2022/6/3，增加边界值判断*/}
+            </Row>
+            <Row type="flex" justify="center">
+                <Col>
+                    <Button type="primary" size="large"
+                        onClick={() => {
+                            if (ID.length > 20) {
+                                alert("账户不能超过20位！")
+                            } else if (ID.length == 0) {
+                                alert("账户不能为空！")
+                            } else if (Password != RePassword) {
+                                alert("两次输入密码不同！")
+                            } else if (Password.length > 20) {
+                                alert("密码不能超过20位！")
+                            } else if (Password.length == 0) {
+                                alert("密码不能为空")
+                            } else if (/.*[\u4e00-\u9fa5]+.*$/.test(Password)) {
+                                alert("密码含有中文！")
+                            }
+                            else {
+                                request('/query_user/register', "POST", { 'Content-Type': 'application/json' },
+                                    {
+                                        "ID": ID,
+                                        "password": Password
+                                    }).then((response) => {
+                                        if (response.code == '0') {
+                                            alert("注册成功");
+                                            navigate('/info')
+                                        }
+                                        else {
+                                            alert(response.message);
+                                        }
+                                    })
+                            }
 
-                    }}
-                > 注册账户</Button>
-            </Col>
+                        }}
+                    > 注册账户</Button>
+                </Col>
+            </Row>
 
-           
         </div>
     )
 }
@@ -438,50 +442,56 @@ function Upgrade() {
     return (
         <div>
             <InfoHead ID={"用户：" + ID} />
-            <Input
-                className="login_inputbox_user"
-                placeholder={ID}
-                prefix={<UserOutlined />}
-                disabled="true"
-            />
-            <Input
-                className="login_inputbox_user"
-                placeholder="支付账户"
-                prefix={<UserOutlined />}
-                onChange={(event) => {
-                    setpay_account_id(event.target.value);
-                }}
-            />
-            <Input.Password
-                className="login_inputbox_pwd"
-                placeholder="支付密码"
-                prefix={<LockOutlined />}
-                onChange={(event) => {
-                    setpay_account_psw(event.target.value);
-                }}
-            />
-            <Col push={11}>
-                <br />
-                <br />
-                <Button type="primary" size="large"
-                    onClick={() => {
-                        request('/query_user/upgrade', "POST", { 'Content-Type': 'application/json' },
-                            {
-                                "ID": ID,
-                                "pay_account_id": pay_account_id,
-                                "pay_account_psw": pay_account_psw
-                            }).then((response) => {
-                                if (response.code == '0') {
-                                    alert("升级成功");
-                                    navigate('/querylogin', { state: { "ID": ID, "Authority": "高级" } })
-                                }
-                                else {
-                                    alert(response.message);
-                                }
-                            })
-                    }}
-                > 升级账户</Button>
-            </Col>
+            <Row type="flex" justify="center">
+                <Col span={18}>
+                    <Input
+                        className="login_inputbox_user"
+                        placeholder={ID}
+                        prefix={<UserOutlined />}
+                        disabled="true"
+                    />
+                    <Input
+                        className="login_inputbox_user"
+                        placeholder="支付账户"
+                        prefix={<UserOutlined />}
+                        onChange={(event) => {
+                            setpay_account_id(event.target.value);
+                        }}
+                    />
+                    <Input.Password
+                        className="login_inputbox_pwd"
+                        placeholder="支付密码"
+                        prefix={<LockOutlined />}
+                        onChange={(event) => {
+                            setpay_account_psw(event.target.value);
+                        }}
+                    />
+                </Col>
+            </Row>
+            <Row type="flex" justify="center">
+                <Col>
+                    <br />
+                    <br />
+                    <Button type="primary" size="large"
+                        onClick={() => {
+                            request('/query_user/upgrade', "POST", { 'Content-Type': 'application/json' },
+                                {
+                                    "ID": ID,
+                                    "pay_account_id": pay_account_id,
+                                    "pay_account_psw": pay_account_psw
+                                }).then((response) => {
+                                    if (response.code == '0') {
+                                        alert("升级成功");
+                                        navigate('/querylogin', { state: { "ID": ID, "Authority": "高级" } })
+                                    }
+                                    else {
+                                        alert(response.message);
+                                    }
+                                })
+                        }}
+                    > 升级账户</Button>
+                </Col>
+            </Row>
         </div>
     )
 }
@@ -495,60 +505,66 @@ function Change() {
     return (
         <div>
             <InfoHead ID={"用户：" + ID} />
-            <Input
-                className="login_inputbox_user"
-                placeholder={ID}
-                prefix={<UserOutlined />}
-                disabled="true"
-            />
-            <Input.Password
-                className="login_inputbox_pwd"
-                placeholder="新密码"
-                prefix={<LockOutlined />}
-                onChange={(event) => {
-                    setPassword(event.target.value);
-                }}
-            />
-            <Input.Password
-                className="login_inputbox_pwd"
-                placeholder="确认密码"
-                prefix={<LockOutlined />}
-                onChange={(event) => {
-                    setNewPassword(event.target.value);
-                }}
-            />
-            {/*修改于2022/6/3，增加边界值判断*/}
-            <Col push={11}>
-            <br />
-            <Button type="primary" size="large"
-                onClick={() => {
-                    if (Password != NewPassword) {
-                        alert("两次输入密码不同！")
-                    } else if (Password.length > 20) {
-                        alert("密码不能超过20位！")
-                    } else if (Password.length == 0) {
-                        alert("密码不能为空！")
-                    } else if (/.*[\u4e00-\u9fa5]+.*$/.test(Password)) {
-                        alert("密码含有中文！")
-                    } else {
-                        request('/query_user/modify', "POST", { 'Content-Type': 'application/json' },
-                            {
-                                "ID": ID,
-                                "password": Password,
-                                "re_password": NewPassword
-                            }).then((response) => {
-                                if (response.code == '0') {
-                                    alert("修改成功");
-                                    navigate('/info')
-                                }
-                                else {
-                                    alert(response.message);
-                                }
-                            })
-                    }
-                }}
-                >确认</Button>
+            <Row type="flex" justify="center">
+                <Col span={18}>
+                    <Input
+                        className="login_inputbox_user"
+                        placeholder={ID}
+                        prefix={<UserOutlined />}
+                        disabled="true"
+                    />
+                    <Input.Password
+                        className="login_inputbox_pwd"
+                        placeholder="新密码"
+                        prefix={<LockOutlined />}
+                        onChange={(event) => {
+                            setPassword(event.target.value);
+                        }}
+                    />
+                    <Input.Password
+                        className="login_inputbox_pwd"
+                        placeholder="确认密码"
+                        prefix={<LockOutlined />}
+                        onChange={(event) => {
+                            setNewPassword(event.target.value);
+                        }}
+                    />
                 </Col>
+            </Row>
+            {/*修改于2022/6/3，增加边界值判断*/}
+            <Row type="flex" justify="center">
+                <Col>
+                    <br />
+                    <Button type="primary" size="large"
+                        onClick={() => {
+                            if (Password != NewPassword) {
+                                alert("两次输入密码不同！")
+                            } else if (Password.length > 20) {
+                                alert("密码不能超过20位！")
+                            } else if (Password.length == 0) {
+                                alert("密码不能为空！")
+                            } else if (/.*[\u4e00-\u9fa5]+.*$/.test(Password)) {
+                                alert("密码含有中文！")
+                            } else {
+                                request('/query_user/modify', "POST", { 'Content-Type': 'application/json' },
+                                    {
+                                        "ID": ID,
+                                        "password": Password,
+                                        "re_password": NewPassword
+                                    }).then((response) => {
+                                        if (response.code == '0') {
+                                            alert("修改成功");
+                                            navigate('/info')
+                                        }
+                                        else {
+                                            alert(response.message);
+                                        }
+                                    })
+                            }
+                        }}
+                    >确认</Button>
+                </Col>
+            </Row>
         </div>
     )
 }
@@ -564,46 +580,45 @@ function HighQueryResult() {
         <div>
             <InfoHead ID={"用户：" + ID}></InfoHead>
             <HighQueryResult1 org={orgifo1}></HighQueryResult1>
-            <Col push={11}>
-                <Button type="primary" size="large"
-                    onClick={() => {
-                        request('/release_search_advanced', "POST", { 'Content-Type': 'application/json' },
-                            {
-                                "content": id
-                            }).then((response) => {
-                                console.log(response);
-                                if (response.code == '0') {
-                                    var i;
-                                    var ifotaple = [];
-                                    var orgifo = [];
-                                    for (i = response.data.length-1; i >=0 ; i--) {
-                                        ifotaple = [];
-                                        ifotaple.push(response.data[i].date);
-                                        ifotaple.push(response.data[i].start_price);
-                                        ifotaple.push(response.data[i].end_price);
-                                        ifotaple.push(response.data[i].lowest_price);
-                                        ifotaple.push(response.data[i].highest_price);
-                                        orgifo.push(ifotaple);
+            <Row type="flex" justify="center">
+                <Col span={2}>
+                    <Button type="primary" size="large"
+                        onClick={() => {
+                            request('/release_search_advanced', "POST", { 'Content-Type': 'application/json' },
+                                {
+                                    "content": id
+                                }).then((response) => {
+                                    console.log(response);
+                                    if (response.code == '0') {
+                                        var i;
+                                        var ifotaple = [];
+                                        var orgifo = [];
+                                        for (i = response.data.length - 1; i >= 0; i--) {
+                                            ifotaple = [];
+                                            ifotaple.push(response.data[i].date);
+                                            ifotaple.push(response.data[i].start_price);
+                                            ifotaple.push(response.data[i].end_price);
+                                            ifotaple.push(response.data[i].lowest_price);
+                                            ifotaple.push(response.data[i].highest_price);
+                                            orgifo.push(ifotaple);
+                                        }
+                                        setorgifo1(orgifo);
                                     }
-                                    setorgifo1(orgifo);
-                                }
-                                else {
-                                    alert(response.message);
-                                }
-                            })
-                    }}
-                >确认</Button>
-                <Button type="primary" size="large"
-                    onClick={() => {
-                        setorgifo1([]);
-                    }}
-                >清空</Button>
-                <Button type="primary" size="large"
-                    onClick={() => {
-                        window.history.back(-1);
-                    }}
-                >退出</Button>
-            </Col>
+                                    else {
+                                        alert(response.message);
+                                    }
+                                })
+                        }}
+                    >确认</Button>
+                    </Col>
+                <Col>
+                    <Button type="primary" size="large"
+                        onClick={() => {
+                            setorgifo1([]);
+                        }}
+                    >清空</Button>
+                </Col>
+            </Row>
         </div>
     )
 }
@@ -772,31 +787,37 @@ class HighQueryResult1 extends React.Component {
     render() {
         return (
             <div>
-                
+
                 <h>{this.props.stock_id}</h>
                 <div id="main1" style={{ width: "1600px", height: "750px", margin: "auto" }}>
                 </div>
                 <div>
-                    <Col push={11}>
-                        <Button type="primary" size="large"
-                            onClick={() => {
-                                this.setState({ ktype: 1 });
-                            }
-                            }
-                        >日图</Button>
-                        <Button type="primary" size="large"
-                            onClick={() => {
-                                this.setState({ ktype: 2 });
-                            }
-                            }
-                        >周图</Button>
-                        <Button type="primary" size="large"
-                            onClick={() => {
-                                this.setState({ ktype: 3 });
-                            }
-                            }
-                        >月图</Button>
-                    </Col>
+                    <Row type="flex" justify="center">
+                        <Col span={2}>
+                            <Button type="primary" size="large"
+                                onClick={() => {
+                                    this.setState({ ktype: 1 });
+                                }
+                                }
+                            >日图</Button>
+                        </Col>
+                        <Col span={2}>
+                            <Button type="primary" size="large"
+                                onClick={() => {
+                                    this.setState({ ktype: 2 });
+                                }
+                                }
+                            >周图</Button>
+                        </Col>
+                        <Col>
+                            <Button type="primary" size="large"
+                                onClick={() => {
+                                    this.setState({ ktype: 3 });
+                                }
+                                }
+                            >月图</Button>
+                        </Col>
+                    </Row>
                 </div>
             </div>
 
