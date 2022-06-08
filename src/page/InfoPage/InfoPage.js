@@ -130,6 +130,7 @@ function InfoPage() {
             <br />
             <br />
             <Row type="flex" justify="center">
+                
                 <Col span={12}>
                     <Input
                         className="login_inputbox_user"
@@ -639,8 +640,11 @@ class HighQueryResult1 extends React.Component {
         var myChart = echarts.init(chartDom);
         var option;
         // var orgifo = [];
-        var orgifo = [];//日期,开，收，低，高
-        var orgifo = this.props.org;
+        //var orgifo = [];//日期,开，收，低，高
+        var orgifo = Object.create(this.props.org);
+        //var orgifo = this.props.org
+        console.log("sos")
+        console.log(orgifo)
         var Sid = this.props.stock_id;
         var date = [];
         var ifo = [];
@@ -671,22 +675,22 @@ class HighQueryResult1 extends React.Component {
                 min = 99999;
                 for (z = -7; z <= 0; z++) {
                     temparr1 = orgifo[i + z];
-                    if (max < temparr1[1]) {
-                        max = temparr1[1];
+                    if (max < temparr1[4]) {
+                        max = temparr1[4];
                     }
-                    if (min > temparr1[2]) {
-                        min = temparr1[2];
+                    if (min > temparr1[3]) {
+                        min = temparr1[3];
                     }
                 }
                 temparr1 = orgifo[i];
-                close = temparr1[4];
-                temparr1 = orgifo[i - 7];
-                open = temparr1[3];
+                close = temparr1[2];
+                temparr1 = orgifo[i - 6];
+                open = temparr1[1];
                 temparr = [];
-                temparr.push(max);
-                temparr.push(min);
                 temparr.push(open);
                 temparr.push(close);
+                temparr.push(min);
+                temparr.push(max);
                 tempifo.push(temparr);
                 temparr1 = orgifo[i];
                 tempdate.push(temparr1[0]);
@@ -706,22 +710,22 @@ class HighQueryResult1 extends React.Component {
                 min = 99999;
                 for (z = -30; z <= 0; z++) {
                     temparr1 = orgifo[i + z];
-                    if (max < temparr1[1]) {
-                        max = temparr1[1];
+                    if (max < temparr1[4]) {
+                        max = temparr1[4];
                     }
-                    if (min > temparr1[2]) {
-                        min = temparr1[2];
+                    if (min > temparr1[3]) {
+                        min = temparr1[3];
                     }
                 }
                 temparr1 = orgifo[i];
-                close = temparr1[4];
-                temparr1 = orgifo[i - 30];
-                open = temparr1[3];
+                close = temparr1[2];
+                temparr1 = orgifo[i - 29];
+                open = temparr1[1];
                 temparr = [];
-                temparr.push(max);
-                temparr.push(min);
                 temparr.push(open);
                 temparr.push(close);
+                temparr.push(min);
+                temparr.push(max);
                 tempifo.push(temparr);
                 temparr1 = orgifo[i];
                 tempdate.push(temparr1[0]);
