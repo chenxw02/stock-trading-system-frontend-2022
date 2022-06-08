@@ -576,7 +576,7 @@ function HighQueryResult() {
                                     var i;
                                     var ifotaple = [];
                                     var orgifo = [];
-                                    for (i = 0; i < response.data.length; i++) {
+                                    for (i = response.data.length-1; i >=0 ; i--) {
                                         ifotaple = [];
                                         ifotaple.push(response.data[i].date);
                                         ifotaple.push(response.data[i].start_price);
