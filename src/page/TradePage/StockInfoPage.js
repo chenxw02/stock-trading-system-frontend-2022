@@ -118,8 +118,8 @@ function showStockInfo() {
 				else {
 					message.success("查询成功");
 					var point = (response.data.price).toFixed(2);
-					var float = ((response.data.price) - (response.data.start)).toFixed(2);
-					var ratio = ((float / response.data.start) * 100).toFixed(2);
+					var float = ((response.data.price) - (response.data.end)).toFixed(2);
+					var ratio = ((float / response.data.end) * 100).toFixed(2);
 
 					document.getElementById("end").innerHTML = response.data.end.toFixed(2);
 					document.getElementById("open").innerHTML = response.data.start.toFixed(2);
