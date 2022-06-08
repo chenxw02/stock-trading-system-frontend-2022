@@ -125,8 +125,12 @@ function InfoPage() {
         <div>
             <InfoHead ID="游客" />
             {/*修改于2022/6/3，增加边界值判断*/}
+            <br />
+            <br />
+            <br />
+            <br />
             <Row type="flex" justify="center">
-                <Col span={9}>
+                <Col span={12}>
                     <Input
                         className="login_inputbox_user"
                         placeholder="账户"
@@ -145,6 +149,9 @@ function InfoPage() {
                     />
                 </Col>
             </Row>
+            <br />
+            <br />
+            <br />
             <Row type="flex" justify="center">
                 <Col span={3}>
                     <Button type="primary" size="large"
