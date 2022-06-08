@@ -3,14 +3,17 @@ import {Link} from 'react-router-dom'
 import React from 'react';
 import './Head.css'
 function Head() {
+    const ticking = () => {
+        document.getElementById('datetime').innerHTML=new Date();
+    }
+    setInterval(ticking,1000);
     return(
-
+      
         <div>
         <div className='stockadmin_title'>
         <div className='stockadmin_welcome'>Hi,Admin</div>
 
-        <div id="datetime" className="stockadmin_datetime">  
-            {setInterval("document.getElementById('datetime').innerHTML=new Date();", 1000)}  
+        <div id="datetime" className="stockadmin_datetime">   
         </div>
         <div className='stockadmin_button_box'>
            <Button type="primary" danger className="stockadmin_button"
