@@ -19,6 +19,9 @@ function InfoHead(props) {
                     {setInterval("document.getElementById('datetime').innerHTML=new Date();", 1000)}
                 </div>*/}
                 <div id="datetime" className="info_datetime"></div>
+                
+                {/* 空的div来占位，大小和前面的welcome一样 */}
+                <div className='info_welcome'></div>
             </div>
             <div className="logo" />
             <div>
