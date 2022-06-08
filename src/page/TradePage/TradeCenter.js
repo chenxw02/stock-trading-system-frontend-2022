@@ -201,8 +201,8 @@ function showStockInfo() {
                     message.success("查询成功");
                     var name = response.data.name;
                     var point = (response.data.price).toFixed(2);
-                    var float = ((response.data.price) - (response.data.start)).toFixed(2);
-                    var ratio = ((float / response.data.start) * 100).toFixed(2);
+                    var float = ((response.data.price) - (response.data.end)).toFixed(2);
+                    var ratio = ((float / response.data.end) * 100).toFixed(2);
                     var Dlow = response.data.Dlow;
                     var Dhigh = response.data.Dhigh;
 

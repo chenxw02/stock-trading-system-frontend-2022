@@ -34,7 +34,7 @@ function AdminPage() {
     const [descNewAmount, setDescNewAmount] = useState(0);
     const [riseThreshold, setRiseThreshold] = useState(0);
     const [fallThreshold, setFallThreshold] = useState(0);
-    
+
     const showDetails = (id, name, rise_threshold, fall_threshold) => {
         console.log(rise_threshold);
         setDescStockId(id);
@@ -211,15 +211,21 @@ function AdminPage() {
         })
 
     }, stocks);
+
+    //下面这部分是:每秒执行一次，获得当前时间并且将该事件替换html中id为"datetime"的组件的值
+    //不把他写到return里面使得该函数脱离react的自动渲染。
+    const ticking = () => {
+        document.getElementById('datetime').innerHTML=new Date();
+    }
+    setInterval(ticking,1000);
+
     return (
         <div className='admin_background'>
 
             <div className='admin_header'>
                 <div className='admin_welcome'>Dear {localStorage.getItem('admin_name')}</div>
 
-                <div id="datetime" className="admin_datetime">
-                    {setInterval("document.getElementById('datetime').innerHTML=new Date();", 1000)}
-                </div>
+                <div id="datetime" className="admin_datetime"></div>
 
                 <div className='admin_button_box'>
                     <Button type="primary" danger className="admin_button"
@@ -292,27 +298,48 @@ function AdminPage() {
                         onChange={(value) => { setFallThreshold(value); }} />
                     <Button type="primary" style={{ width: '10%', marginTop: "1.5%", marginLeft: "10%" }}
                         onClick={() => {
-                            request('/admin/stock_threshold', "PUT",
-                                {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': localStorage.getItem('token')
-                                },
-                                {
-                                    "stock_id": descStockId,
-                                    "rise_threshold": riseThreshold,
-                                    "fall_threshold": fallThreshold
-                                }).then((response) => {
+                            if (riseThreshold >= 100 || riseThreshold < 0 || fallThreshold >= 100 || fallThreshold < 0) {
+                                alert("非法涨跌幅,请重新输入!");
+                            }
+                            else {
+                                request('/admin/stock_threshold', "PUT",
+                                    {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': localStorage.getItem('token')
+                                    },
+                                    {
+                                        "stock_id": descStockId,
+                                        "rise_threshold": riseThreshold,
+                                        "fall_threshold": fallThreshold
+                                    }).then((r) => {
 
-                                    if (response.code == '102') {
-                                        window.location.href = "./";
-                                    }
-                                    else if (response.code == '0') {
-                                        alert("涨跌幅更新成功");
-                                    }
-                                    else {
-                                        alert(response.message);
-                                    }
-                                })
+                                        if (r.code == '102') {
+                                            window.location.href = "./";
+                                        }
+                                        else if (r.code == '0') {
+                                            request('/admin/permission', "GET",
+                                                {
+                                                    'Content-Type': 'application/json',
+                                                    'Authorization': localStorage.getItem('token')
+                                                }
+                                            ).then((response) => {
+                                                if (response.code == '0') {
+                                                    setStocks(response.data);
+                                                }
+                                                else if (response.code == '102') {
+                                                    window.location.href = "./";
+                                                }
+                                                else {
+                                                    alert(response.message);
+                                                }
+                                            })
+                                            alert("涨跌幅更新成功");
+                                        }
+                                        else {
+                                            alert(r.message);
+                                        }
+                                    })
+                            }
                         }}>
                         设置
                     </Button>,
@@ -345,7 +372,10 @@ function AdminPage() {
                     />
                     <Button type="primary" style={{ width: '20%', marginTop: "3%", marginLeft: "75%" }}
                         onClick={() => {
-                            if (newPassword == confirmPassword) {
+                            if (newPassword.length == 0 || oldPassword.length == 0 || confirmPassword.length == 0) {
+                                alert("输入不可为空!");
+                            }
+                            else if (newPassword == confirmPassword) {
                                 request('/admin', "PUT",
                                     {
                                         'Content-Type': 'application/json',
