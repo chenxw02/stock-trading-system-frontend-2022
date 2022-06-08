@@ -36,7 +36,6 @@ function AdminPage() {
     const [fallThreshold, setFallThreshold] = useState(0);
 
     const showDetails = (id, name, rise_threshold, fall_threshold) => {
-        console.log(rise_threshold);
         setDescStockId(id);
         setDescStockName(name);
         setRiseThreshold(rise_threshold);
@@ -68,7 +67,24 @@ function AdminPage() {
                 "stock_id": id,
             }).then((response) => {
                 if (response.code == '0') {
-                    setStockDataBuy(response.data);
+                    let tmp = response.data;
+                    for (var i = 0; i < tmp.length; i++) {
+                        let oringin_time = tmp[i].time;
+                        console.log(oringin_time);
+
+                        let sec = oringin_time % 100;
+                        let str_sec = (sec < 10) ? ("0" + sec) : ("" + sec);
+                        let min = parseInt(oringin_time / 100) % 100;
+                        let str_min = (min < 10) ? ("0" + min) : ("" + min);
+                        let hour = parseInt(oringin_time / 10000) % 100;
+                        let str_hour = (hour < 10) ? ("0" + hour) : ("" + hour);
+                        let day = parseInt(oringin_time / 1000000);
+                        let str_day = (day < 10) ? ("0" + day) : ("" + day);
+                        console.log(str_sec, str_min, str_hour, str_day);
+                        tmp[i].time = "2022-06-" + str_day + ": " + str_hour + ": " + str_min + ": " + str_sec;
+                        console.log(tmp[i].time);
+                    }
+                    setStockDataBuy(tmp);
                 }
                 else {
                     alert(response.message);
@@ -85,13 +101,30 @@ function AdminPage() {
                 "stock_id": id,
             }).then((response) => {
                 if (response.code == '0') {
-                    setStockDataSell(response.data);
+                    let tmp = response.data;
+                    for (var i = 0; i < tmp.length; i++) {
+                        let oringin_time = tmp[i].time;
+                        console.log(oringin_time);
+
+                        let sec = oringin_time % 100;
+                        let str_sec = (sec < 10) ? ("0" + sec) : ("" + sec);
+                        let min = parseInt(oringin_time / 100) % 100;
+                        let str_min = (min < 10) ? ("0" + min) : ("" + min);
+                        let hour = parseInt(oringin_time / 10000) % 100;
+                        let str_hour = (hour < 10) ? ("0" + hour) : ("" + hour);
+                        let day = parseInt(oringin_time / 1000000);
+                        let str_day = (day < 10) ? ("0" + day) : ("" + day);
+                        console.log(str_sec, str_min, str_hour, str_day);
+                        tmp[i].time = "2022-06-" + str_day + ":" + str_hour + ":" + str_min + ":" + str_sec;
+                        console.log(tmp[i].time);
+                    }
+
+                    setStockDataSell(tmp);
                 }
                 else {
                     alert(response.message);
                 }
             });
-
         setIsDetailsVisible(true);
     };
 
@@ -174,7 +207,7 @@ function AdminPage() {
             title: '股票价格',
             key: 'target_price',
             dataIndex: 'target_price',
-            sorter: (a, b) => a.price - b.price,
+            sorter: (a, b) => a.target_price - b.target_price,
             defaultSortOrder: { stockSortOrder },
         },
         {
@@ -197,8 +230,6 @@ function AdminPage() {
             }
         ).then((response) => {
             //虽然下面这个If分支毫无意义，但是为了展现代码结构，我还是保留着了
-            console.log(localStorage.getItem('token'));
-            console.log(response.code);
             if (response.code == '0') {
                 setStocks(response.data);
             }
@@ -215,9 +246,9 @@ function AdminPage() {
     //下面这部分是:每秒执行一次，获得当前时间并且将该事件替换html中id为"datetime"的组件的值
     //不把他写到return里面使得该函数脱离react的自动渲染。
     const ticking = () => {
-        document.getElementById('datetime').innerHTML=new Date();
+        document.getElementById('datetime').innerHTML = new Date();
     }
-    setInterval(ticking,1000);
+    setInterval(ticking, 1000);
 
     return (
         <div className='admin_background'>
